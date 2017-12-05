@@ -1,58 +1,63 @@
-import java.awt.Color;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class GridViewer extends JPanel {
+public class GridViewer extends JPanel implements ActionListener {
 
     private final SimulationState simulationState;
-    private final static int WIDTH = 600;
-    private final static int HEIGHT = 600;
-    private final int BLOCK_SIZE;
+    private final Canvas canvas;
+    
+    final JButton cursorTool;
+    final JButton carTool;
+    final JButton passengerTool;
     
     public GridViewer(SimulationState simulationState) {
         this.simulationState = simulationState;
-        BLOCK_SIZE = WIDTH / simulationState.tiles[0].length;
-        setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        simulationState.tiles[0][0].cars.add(new Car());
-  
-    }
-    
-    @Override
-    public void paintComponent(Graphics g) {
-        //clear
-        g.setColor(Color.WHITE);
-        g.fillRect(0,0,getWidth(),getHeight());
+        canvas = new Canvas(simulationState);
         
-        //draw grid
-        g.setColor(Color.LIGHT_GRAY);
-        for (int x = 0; x < WIDTH ; x++) {
-            for (int y = 0; y < HEIGHT; y++) {
-                if (x % BLOCK_SIZE == 0) {
-                    g.drawLine(x, 0, x, HEIGHT);
-                }
-                if (y % BLOCK_SIZE == 0) {
-                    g.drawLine(0, y, WIDTH, y);
-                }
-            }
-        }
+        simulationState.tiles[3][0].cars.add(new Car()); //temp
+        simulationState.tiles[1][1].passengers.add(new Passenger());
         
-        
-        for (int x = 0; x < simulationState.tiles.length ; x++) {
-            for (int y = 0; y < simulationState.tiles[0].length; y++) {
+        setLayout(new BorderLayout());
+        JPanel rightColumn = new JPanel();
+        {
+            rightColumn.setLayout(new BoxLayout(rightColumn, BoxLayout.Y_AXIS));
             
-                //draw car
-                if (simulationState.tiles[x][y].cars.size() > 0) {
-                    g.setColor(Color.RED);
-                    g.fillPolygon(new int[]{x, x + BLOCK_SIZE / 4, x + BLOCK_SIZE / 2, x + 3 * BLOCK_SIZE / 4, x + BLOCK_SIZE, x + BLOCK_SIZE, x},
-                                  new int[]{y + BLOCK_SIZE / 2, y + BLOCK_SIZE / 4, y + BLOCK_SIZE / 4,
-					    y + BLOCK_SIZE / 2, y + BLOCK_SIZE / 2, y + 3 * BLOCK_SIZE / 4, y + 3 * BLOCK_SIZE / 4},
-                                  7
-                    );
-                    g.fillOval(x + 1 * BLOCK_SIZE / 8, y + 5 * BLOCK_SIZE / 8, BLOCK_SIZE / 4, BLOCK_SIZE /4);
-                    g.fillOval(x + 5 * BLOCK_SIZE / 8, y + 5 * BLOCK_SIZE / 8, BLOCK_SIZE / 4, BLOCK_SIZE / 4);
-                }
-            }
+            cursorTool = new JButton();
+            cursorTool.setMaximumSize(new Dimension(30, 30));
+            cursorTool.addActionListener(this);
+            rightColumn.add(cursorTool);
+            
+            carTool = new JButton();
+            carTool.setMaximumSize(new Dimension(30, 30));
+            carTool.addActionListener(this);
+            rightColumn.add(carTool);
+            
+            passengerTool = new JButton();
+            passengerTool.setMaximumSize(new Dimension(30, 30));
+            passengerTool.addActionListener(this);
+            rightColumn.add(passengerTool);
+            
         }
-    }   
+        add(rightColumn, BorderLayout.EAST);
+        add(canvas, BorderLayout.CENTER);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
+        if (source == cursorTool) {
+            canvas.setCurrentTool(Canvas.CanvasTool.TOOL_CURSOR);
+        } else if (source == carTool) {
+            canvas.setCurrentTool(Canvas.CanvasTool.TOOL_NEW_CAR);
+        } else if (source == passengerTool) {
+            canvas.setCurrentTool(Canvas.CanvasTool.TOOL_NEW_PASSENGER);
+        }
+    }
 }

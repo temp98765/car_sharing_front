@@ -5,6 +5,7 @@ public class SimulationState {
     
     public class Tile {
         public final List<Car> cars = new ArrayList<>();
+        public final List<Passenger> passengers = new ArrayList<>();
     }
     
     public Tile[][] tiles = new Tile[10][10];
