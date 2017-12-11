@@ -58,11 +58,11 @@ public class GridViewer extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if (source == cursorTool) {
-            canvas.setCurrentTool(Canvas.CanvasTool.TOOL_CURSOR);
+            canvas.setCurrentTool(CanvasTool.TOOL_CURSOR);
         } else if (source == carTool) {
-            canvas.setCurrentTool(Canvas.CanvasTool.TOOL_NEW_CAR);
+            canvas.setCurrentTool(CanvasTool.TOOL_NEW_CAR);
         } else if (source == passengerTool) {
-            canvas.setCurrentTool(Canvas.CanvasTool.TOOL_NEW_PASSENGER);
+            canvas.setCurrentTool(CanvasTool.TOOL_NEW_PASSENGER);
         }
     }
 }

@@ -20,12 +20,6 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
     
     float mouseX = -1, mouseY = -1;
     
-    public enum CanvasTool {
-        TOOL_CURSOR,
-        TOOL_NEW_CAR,
-        TOOL_NEW_PASSENGER,
-    }
-    
     private CanvasTool currentTool = CanvasTool.TOOL_CURSOR;
     
     public Canvas(SimulationState simulationState) {
