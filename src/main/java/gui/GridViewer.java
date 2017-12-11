@@ -35,16 +35,19 @@ public class GridViewer extends JPanel implements ActionListener {
             rightColumn.setLayout(new BoxLayout(rightColumn, BoxLayout.Y_AXIS));
             
             cursorTool = new JButton();
+            cursorTool.setToolTipText("Cursor. Right click to delete any entity in the tile.");
             cursorTool.setMaximumSize(new Dimension(30, 30));
             cursorTool.addActionListener(this);
             rightColumn.add(cursorTool);
             
             carTool = new JButton();
+            carTool.setToolTipText("Car. Add Car with left click. Right click to delete any entity in the tile.");
             carTool.setMaximumSize(new Dimension(30, 30));
             carTool.addActionListener(this);
             rightColumn.add(carTool);
             
             passengerTool = new JButton();
+            passengerTool.setToolTipText("Passenger. Add passenger with left click. Right click to delete any entity in the tile.");
             passengerTool.setMaximumSize(new Dimension(30, 30));
             passengerTool.addActionListener(this);
             rightColumn.add(passengerTool);
