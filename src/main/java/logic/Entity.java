@@ -1,3 +1,5 @@
+package logic;
+
 import java.awt.Point;
 
 public class Entity {

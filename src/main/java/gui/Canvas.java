@@ -1,3 +1,8 @@
+package gui;
+
+import logic.Car;
+import logic.Passenger;
+import logic.SimulationState;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
