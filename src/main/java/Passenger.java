@@ -1,5 +1,6 @@
-public class Passenger {
+public class Passenger extends Entity {
 
-    public Passenger() {
-    }  
+    public Passenger(int x, int y) {
+        super(x, y);
+    }
 }

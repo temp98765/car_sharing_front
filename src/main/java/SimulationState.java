@@ -1,19 +1,69 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class SimulationState {
+public class SimulationState {    
+    private final List<Entity> entities = new ArrayList<>();
+    private int width = 10;
     
-    public class Tile {
-        public final List<Car> cars = new ArrayList<>();
-        public final List<Passenger> passengers = new ArrayList<>();
+    public SimulationState() {
     }
     
-    public Tile[][] tiles = new Tile[10][10];
-
-    public SimulationState() {
-        for (int x = 0; x < tiles.length; x++) {
-            for (int y = 0; y < tiles[0].length; y++) {
-                tiles[x][y] = new Tile();
+    public int getWidth() {
+        return width;
+    }
+    
+    public void setWidth(int width) {
+        this.width = width;
+        //@improve : remove entities outside the new width
+    }
+    
+    public void addCar(Car car) {
+        List<Car> cars = getAllCars();
+        for (Car c : cars) {
+            if (c.position.x == car.position.x && c.position.y == car.position.y) {
+                return; //@fix : temporarily disable multiple cars at the same place
+            }
+        }
+        entities.add(car);
+    }
+    
+    public List<Car> getAllCars() {
+        List<Car> cars = new ArrayList<>();
+        for (Entity entity : entities) {
+            if (entity instanceof Car) {
+                cars.add((Car) entity);
+            }
+        }
+        return cars;
+    }
+    
+    public void addPassenger(Passenger passenger) {
+        List<Passenger> passengers = getAllPassengers();
+        for (Passenger p : passengers) {
+            if (p.position.x == passenger.position.x && p.position.y == passenger.position.y) {
+                return; //@fix : temporarily disable multiple passengers at the same place
+            }
+        }
+        entities.add(passenger);
+    }
+    
+    public List<Passenger> getAllPassengers() {
+        List<Passenger> passengers = new ArrayList<>();
+        for (Entity entity : entities) {
+            if (entity instanceof Passenger) {
+                passengers.add((Passenger) entity);
+            }
+        }
+        return passengers;
+    }
+    
+    public void removeAt(int x, int y) {
+        Iterator<Entity> it = entities.iterator();
+        while (it.hasNext()) {
+            Entity entity = it.next();
+            if (entity.position.x == x && entity.position.y == y) {
+                it.remove();
             }
         }
     }

@@ -21,8 +21,8 @@ public class GridViewer extends JPanel implements ActionListener {
         this.simulationState = simulationState;
         canvas = new Canvas(simulationState);
         
-        simulationState.tiles[3][0].cars.add(new Car()); //temp
-        simulationState.tiles[1][1].passengers.add(new Passenger());
+        simulationState.addCar(new Car(3, 0));//temp
+        simulationState.addPassenger(new Passenger(1, 1));
         
         setLayout(new BorderLayout());
         JPanel rightColumn = new JPanel();
