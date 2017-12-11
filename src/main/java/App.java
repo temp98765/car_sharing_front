@@ -63,4 +63,8 @@ public class App {
 	frame.pack();
         frame.setVisible(true);
     }
+    
+    public static void main(String[] arg) {
+        new App();
+    }
 }
