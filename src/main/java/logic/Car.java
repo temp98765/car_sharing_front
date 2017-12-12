@@ -1,15 +1,14 @@
 package logic;
 
-
-import logic.Entity;
-
 public class Car extends Entity {
+    private static int id = 0;
+    
     public Car(int x, int y) {
-        super(x, y);
+        super(id++, x, y);
     }
     
     @Override
     public String toString() {
-        return "Car {position = " + position.x + ", " + position.y + "}";
+        return "Car {id = " + id + " position = (" + position.x + ", " + position.y + ")}";
     }
 }

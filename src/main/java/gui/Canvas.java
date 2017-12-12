@@ -5,6 +5,7 @@ import logic.Passenger;
 import logic.SimulationState;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -69,6 +70,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
             int pixelX = car.position.x * blockSize;
             int pixelY = car.position.y * blockSize;
             drawCar(g, pixelX, pixelY);
+            drawId(g, car.getId(), pixelX, pixelY);
         }
     }
     
@@ -88,6 +90,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
             int pixelX = passenger.position.x * blockSize;
             int pixelY = passenger.position.y * blockSize;
             drawPassenger(g, pixelX, pixelY);
+            drawId(g, passenger.getId(), pixelX, pixelY);
         }
     }
     
@@ -98,7 +101,16 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
                       5);
         g.fillOval(x + 3 * blockSize / 8, y, blockSize / 4, blockSize / 4);
     }
-
+    
+    private void drawId(Graphics g, int id, int x, int y) {
+        g.setColor(Color.BLACK);
+        //use a bigger font
+        Font currentFont = g.getFont();
+        Font newFont = currentFont.deriveFont(20f); //@fix : hardcoded size
+        g.setFont(newFont);
+        g.drawString("" + id, x, y + blockSize);
+    }
+    
     private void drawCursor(Graphics g) {
         if (mouseX != -1 && mouseY != -1) {
             if (currentTool == CanvasTool.TOOL_NEW_CAR) {
