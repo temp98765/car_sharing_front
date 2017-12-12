@@ -69,4 +69,8 @@ public class SimulationState {
             }
         }
     }
+    
+    public void clear() {
+        entities.clear();
+    }
 }

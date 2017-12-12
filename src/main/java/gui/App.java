@@ -5,6 +5,8 @@ import logic.SimulationState;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -16,10 +18,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
-public class App {
+public class App implements ActionListener {
+    final JMenuItem newSimulation;
+    final JMenuItem openSimulation;
+    final JMenuItem saveSimulation;
+    
     private final JFrame frame = new JFrame();
-    private final JButton step = new JButton("step");
-    private final JButton solve = new JButton("solve");
+    private final JButton step = new JButton("Step");
+    private final JButton solve = new JButton("Solve");
     
     private final SimulationState simulationState = new SimulationState();
     private final GridViewer gridViewer;
@@ -29,14 +35,23 @@ public class App {
         final JMenuBar menuBar = new JMenuBar();
         {
             final JMenu menuFile = new JMenu("File");
-            final JMenuItem newSimulation = new JMenuItem("New simulation");
+            
+            newSimulation = new JMenuItem("New simulation");
+            newSimulation.addActionListener(this);
             menuFile.add(newSimulation);
-            final JMenuItem openSimulation = new JMenuItem("Open simulation");
+            
+            openSimulation = new JMenuItem("Open simulation");
+            openSimulation.addActionListener(this);
             menuFile.add(openSimulation);
-            final JMenuItem saveSimulation = new JMenuItem("Save simulation");
+            
+            saveSimulation = new JMenuItem("Save simulation");
+            saveSimulation.addActionListener(this);
             menuFile.add(saveSimulation);
+            
             menuFile.addSeparator();
+            
             final JMenuItem quit = new JMenuItem("Quit");
+            quit.addActionListener(this);
             menuFile.add(quit);
             
             menuBar.add(menuFile);
@@ -72,5 +87,14 @@ public class App {
     
     public static void main(String[] arg) throws Exception {
         new App();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
+        if (source == newSimulation) {
+            simulationState.clear();
+            gridViewer.repaint();
+        }
     }
 }
