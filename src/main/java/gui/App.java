@@ -18,14 +18,20 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-public class App implements ActionListener {
+public class App implements ActionListener, ChangeListener {
     final JMenuItem newSimulation;
     final JMenuItem openSimulation;
     final JMenuItem saveSimulation;
     final JMenuItem quit;
     
     private final JFrame frame = new JFrame();
+    
+    private final JSpinner size = new JSpinner(new SpinnerNumberModel(10, 3, 20, 1));
     private final JButton step = new JButton("Step");
     private final JButton solve = new JButton("Solve");
     
@@ -62,6 +68,11 @@ public class App implements ActionListener {
         JPanel leftColumn = new JPanel();
         {
             leftColumn.setLayout(new BoxLayout(leftColumn,BoxLayout.Y_AXIS));
+       
+            leftColumn.add(new JLabel("Size :"));
+            size.addChangeListener(this);
+            leftColumn.add(size);
+            
             leftColumn.add(new JLabel("Algorithm :"));
             final String[] algosString = {"Deterministic" , "Simulated Annealing", "Genetic"};
             final JComboBox algos = new JComboBox(algosString);
@@ -106,6 +117,15 @@ public class App implements ActionListener {
             fileChooser.showSaveDialog(null);
         } else if (source == quit) {
             System.exit(0);
+        }
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        Object source = e.getSource();
+        if (source == size) {
+            simulationState.setSize((int) size.getValue());
+            gridViewer.repaint();
         }
     }
 }

@@ -38,7 +38,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
     
     @Override
     public void paintComponent(Graphics g) {
-        blockSize = WIDTH / simulationState.getWidth();
+        blockSize = WIDTH / simulationState.getSize();
 
         //clear
         g.setColor(Color.WHITE);

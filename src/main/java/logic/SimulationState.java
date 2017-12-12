@@ -6,18 +6,19 @@ import java.util.List;
 
 public class SimulationState {    
     private final List<Entity> entities = new ArrayList<>();
-    private int width = 10;
+    private int size = 10;
     
     public SimulationState() {
     }
     
-    public int getWidth() {
-        return width;
+    public int getSize() {
+        return size;
     }
     
-    public void setWidth(int width) {
-        this.width = width;
-        //@improve : remove entities outside the new width
+    public void setSize(int size) {
+        assert(size > 3);
+        this.size = size;
+        //@improve : remove entities outside the new size
     }
     
     public void addCar(Car car) {
