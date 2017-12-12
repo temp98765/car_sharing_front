@@ -18,7 +18,13 @@ public class SimulationState {
     public void setSize(int size) {
         assert(size > 3);
         this.size = size;
-        //@improve : remove entities outside the new size
+        Iterator<Entity> it = entities.iterator();
+        while (it.hasNext()) {
+            Entity entity = it.next();
+            if (entity.position.x >= size || entity.position.y >= size) {
+                it.remove();
+            }
+        }
     }
     
     public void addCar(Car car) {
