@@ -5,6 +5,7 @@ import logic.SimulationState;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.io.IOException;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -21,9 +22,10 @@ public class App {
     private final JButton solve = new JButton("solve");
     
     private final SimulationState simulationState = new SimulationState();
-    private final GridViewer gridViewer = new GridViewer(simulationState);
+    private final GridViewer gridViewer;
     
-    public App() {
+    public App() throws IOException {
+        gridViewer = new GridViewer(simulationState);
         final JMenuBar menuBar = new JMenuBar();
         {
             final JMenu menuFile = new JMenu("File");
@@ -68,7 +70,7 @@ public class App {
         frame.setVisible(true);
     }
     
-    public static void main(String[] arg) {
+    public static void main(String[] arg) throws Exception {
         new App();
     }
 }

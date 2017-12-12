@@ -7,9 +7,14 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.URL;
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -22,7 +27,7 @@ public class GridViewer extends JPanel implements ActionListener {
     final JButton carTool;
     final JButton passengerTool;
     
-    public GridViewer(SimulationState simulationState) {
+    public GridViewer(SimulationState simulationState) throws IOException {
         this.simulationState = simulationState;
         canvas = new Canvas(simulationState);
         
