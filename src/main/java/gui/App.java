@@ -11,6 +11,7 @@ import java.io.IOException;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -22,6 +23,7 @@ public class App implements ActionListener {
     final JMenuItem newSimulation;
     final JMenuItem openSimulation;
     final JMenuItem saveSimulation;
+    final JMenuItem quit;
     
     private final JFrame frame = new JFrame();
     private final JButton step = new JButton("Step");
@@ -50,7 +52,7 @@ public class App implements ActionListener {
             
             menuFile.addSeparator();
             
-            final JMenuItem quit = new JMenuItem("Quit");
+            quit = new JMenuItem("Quit");
             quit.addActionListener(this);
             menuFile.add(quit);
             
@@ -92,9 +94,18 @@ public class App implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
+       
         if (source == newSimulation) {
             simulationState.clear();
             gridViewer.repaint();
+        } else if (source == openSimulation) {
+            final JFileChooser fileChooser = new JFileChooser();
+            fileChooser.showOpenDialog(null);
+        } else if (source == saveSimulation) {
+            final JFileChooser fileChooser = new JFileChooser();
+            fileChooser.showSaveDialog(null);
+        } else if (source == quit) {
+            System.exit(0);
         }
     }
 }
