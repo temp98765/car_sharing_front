@@ -9,4 +9,8 @@ public class Entity {
         position = new Point(x, y);
     }
     
+    @Override
+    public String toString() {
+        return "Entity {position = " + position.x + ", " + position.y + "}";
+    }
 }
