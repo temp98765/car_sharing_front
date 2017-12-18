@@ -19,11 +19,10 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JToolBar;
 import javax.swing.SpinnerNumberModel;
-import static javax.swing.SwingConstants.VERTICAL;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-public class CarSharing implements ActionListener, ChangeListener {
+public class CarSharing {
     private final JMenuItem newSimulation;
     private final JMenuItem openSimulation;
     private final JMenuItem saveSimulation;
@@ -48,21 +47,44 @@ public class CarSharing implements ActionListener, ChangeListener {
         final JMenu menuFile = new JMenu("File");
 
         newSimulation = new JMenuItem("New simulation");
-        newSimulation.addActionListener(this);
+        newSimulation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                simulationState.clear();
+                canvas.repaint();
+            }
+        });
         menuFile.add(newSimulation);
 
         openSimulation = new JMenuItem("Open simulation");
-        openSimulation.addActionListener(this);
+        openSimulation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                final JFileChooser fileChooser = new JFileChooser();
+                fileChooser.showOpenDialog(null);
+            }
+        });
         menuFile.add(openSimulation);
 
         saveSimulation = new JMenuItem("Save simulation");
-        saveSimulation.addActionListener(this);
+        saveSimulation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                final JFileChooser fileChooser = new JFileChooser();
+                fileChooser.showSaveDialog(null);
+            }
+        });
         menuFile.add(saveSimulation);
 
         menuFile.addSeparator();
 
         quit = new JMenuItem("Quit");
-        quit.addActionListener(this);
+        quit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
         menuFile.add(quit);
 
         menuBar.add(menuFile);
@@ -72,7 +94,14 @@ public class CarSharing implements ActionListener, ChangeListener {
         leftColumn.setLayout(new BoxLayout(leftColumn,BoxLayout.Y_AXIS));
 
         leftColumn.add(new JLabel("Size :"));
-        size.addChangeListener(this);
+        size.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                simulationState.setSize((int) size.getValue());
+                canvas.repaint();
+            }
+            
+        });
         leftColumn.add(size);
 
         leftColumn.add(new JLabel("Algorithm :"));
@@ -84,33 +113,48 @@ public class CarSharing implements ActionListener, ChangeListener {
         leftColumn.add(solve);
         
         
-        final JToolBar toolBar = new JToolBar(VERTICAL);
+        final JToolBar toolBar = new JToolBar();
         
         cursorTool.setToolTipText("Cursor. Right click to delete any entity in the tile.");
         cursorTool.setPreferredSize(new Dimension(30, 30));
         cursorTool.setMinimumSize(new Dimension(30, 30));
         cursorTool.setMaximumSize(new Dimension(30, 30));
-        cursorTool.addActionListener(this);
+        cursorTool.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                canvas.setCurrentTool(CanvasTool.TOOL_CURSOR);
+            }
+        });
         toolBar.add(cursorTool);
 
         carTool.setToolTipText("Car. Add Car with left click. Right click to delete any entity in the tile.");
         carTool.setPreferredSize(new Dimension(30, 30));
         carTool.setMinimumSize(new Dimension(30, 30));
         carTool.setMaximumSize(new Dimension(30, 30));
-        carTool.addActionListener(this);
+        carTool.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                canvas.setCurrentTool(CanvasTool.TOOL_NEW_CAR);
+            }
+        });
         toolBar.add(carTool);
 
         passengerTool.setToolTipText("Passenger. Add passenger with left click. Right click to delete any entity in the tile.");
         passengerTool.setPreferredSize(new Dimension(30, 30));
         passengerTool.setMinimumSize(new Dimension(30, 30));
         passengerTool.setMaximumSize(new Dimension(30, 30));
-        passengerTool.addActionListener(this);
+        passengerTool.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                canvas.setCurrentTool(CanvasTool.TOOL_NEW_PASSENGER);
+            }
+        });
         toolBar.add(passengerTool);
         
         
         final JPanel container = new JPanel();
         container.setLayout(new BorderLayout());
-        container.add(toolBar, BorderLayout.EAST);
+        container.add(toolBar, BorderLayout.PAGE_START);
         container.add(leftColumn, BorderLayout.WEST);
         container.add(canvas, BorderLayout.CENTER);
         
@@ -124,38 +168,5 @@ public class CarSharing implements ActionListener, ChangeListener {
     
     public static void main(String[] arg) throws Exception {
         new CarSharing();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        Object source = e.getSource();
-       
-        if (source == newSimulation) {
-            simulationState.clear();
-            canvas.repaint();
-        } else if (source == openSimulation) {
-            final JFileChooser fileChooser = new JFileChooser();
-            fileChooser.showOpenDialog(null);
-        } else if (source == saveSimulation) {
-            final JFileChooser fileChooser = new JFileChooser();
-            fileChooser.showSaveDialog(null);
-        } else if (source == quit) {
-            System.exit(0);
-        } else if (source == cursorTool) {
-            canvas.setCurrentTool(CanvasTool.TOOL_CURSOR);
-        } else if (source == carTool) {
-            canvas.setCurrentTool(CanvasTool.TOOL_NEW_CAR);
-        } else if (source == passengerTool) {
-            canvas.setCurrentTool(CanvasTool.TOOL_NEW_PASSENGER);
-        }
-    }
-
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        Object source = e.getSource();
-        if (source == size) {
-            simulationState.setSize((int) size.getValue());
-            canvas.repaint();
-        }
     }
 }
