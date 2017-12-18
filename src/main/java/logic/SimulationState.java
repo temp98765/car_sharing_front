@@ -30,15 +30,16 @@ public class SimulationState {
         }
     }
     
-    public void addCar(Car car) {
+    public boolean addCar(Car car) {
         List<Car> cars = getAllCars();
         for (Car c : cars) {
             if (c.getPosition().equals(car.getPosition())) {
-                return; //@fix : temporarily disable multiple cars at the same place
+                return false; //@fix : temporarily disable multiple cars at the same place
             }
         }
         car.setId(staticCarId++);
         entities.add(car);
+        return true;
     }
     
     public List<Car> getAllCars() {
@@ -51,15 +52,16 @@ public class SimulationState {
         return cars;
     }
     
-    public void addPassenger(Passenger passenger) {
+    public boolean addPassenger(Passenger passenger) {
         List<Passenger> passengers = getAllPassengers();
         for (Passenger p : passengers) {
             if (p.getPosition().equals(passenger.getPosition())) {
-                return; //@fix : temporarily disable multiple passengers at the same place
+                return false; //@fix : temporarily disable multiple passengers at the same place
             }
         }
         passenger.setId(staticPassengerId++);
         entities.add(passenger);
+        return true;
     }
     
     public List<Passenger> getAllPassengers() {
