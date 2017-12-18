@@ -3,10 +3,14 @@ package gui;
 import logic.SimulationState;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.URL;
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -115,10 +119,8 @@ public class CarSharing {
         
         final JToolBar toolBar = new JToolBar();
         
+        cursorTool.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("/cursor.png"))));
         cursorTool.setToolTipText("Cursor. Right click to delete any entity in the tile.");
-        cursorTool.setPreferredSize(new Dimension(30, 30));
-        cursorTool.setMinimumSize(new Dimension(30, 30));
-        cursorTool.setMaximumSize(new Dimension(30, 30));
         cursorTool.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -127,10 +129,8 @@ public class CarSharing {
         });
         toolBar.add(cursorTool);
 
+        carTool.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("/car.png"))));
         carTool.setToolTipText("Car. Add Car with left click. Right click to delete any entity in the tile.");
-        carTool.setPreferredSize(new Dimension(30, 30));
-        carTool.setMinimumSize(new Dimension(30, 30));
-        carTool.setMaximumSize(new Dimension(30, 30));
         carTool.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -139,10 +139,8 @@ public class CarSharing {
         });
         toolBar.add(carTool);
 
+        passengerTool.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("/passenger.png"))));
         passengerTool.setToolTipText("Passenger. Add passenger with left click. Right click to delete any entity in the tile.");
-        passengerTool.setPreferredSize(new Dimension(30, 30));
-        passengerTool.setMinimumSize(new Dimension(30, 30));
-        passengerTool.setMaximumSize(new Dimension(30, 30));
         passengerTool.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
