@@ -19,7 +19,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
     private final static int HEIGHT = 600;
     private int blockSize;
     
-    float mouseX = -1, mouseY = -1;
+    private float mouseX = -1, mouseY = -1;
     
     private CanvasTool currentTool = CanvasTool.TOOL_CURSOR;
     
@@ -67,8 +67,8 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
     private void drawCars(Graphics g) {
         List<Car> cars = simulationState.getAllCars();
         for (Car car : cars) {
-            int pixelX = car.position.x * blockSize;
-            int pixelY = car.position.y * blockSize;
+            int pixelX = car.getPosition().x * blockSize;
+            int pixelY = car.getPosition().y * blockSize;
             drawCar(g, pixelX, pixelY);
             drawId(g, car.getId(), pixelX, pixelY);
         }
@@ -87,8 +87,8 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
     private void drawPassengers(Graphics g) {
         List<Passenger> passengers = simulationState.getAllPassengers();
         for (Passenger passenger : passengers) {
-            int pixelX = passenger.position.x * blockSize;
-            int pixelY = passenger.position.y * blockSize;
+            int pixelX = passenger.getPosition().x * blockSize;
+            int pixelY = passenger.getPosition().y * blockSize;
             drawPassenger(g, pixelX, pixelY);
             drawId(g, passenger.getId(), pixelX, pixelY);
         }

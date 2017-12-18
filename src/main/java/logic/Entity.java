@@ -3,16 +3,23 @@ package logic;
 import java.awt.Point;
 
 public class Entity {
-    final int id;
-    final public Point position;
+    private int id;
+    private final Point position;
     
-    Entity(int id, int x, int y) {
-        this.id = id;
+    public Entity(int x, int y) {
         position = new Point(x, y);
     }
     
     public int getId() {
         return id;
+    }
+    
+     public void setId(int id) {
+        this.id = id;
+    }
+    
+    public Point getPosition() {
+        return position;
     }
     
     @Override

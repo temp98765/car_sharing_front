@@ -1,5 +1,6 @@
 package logic;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -21,7 +22,7 @@ public class SimulationState {
         Iterator<Entity> it = entities.iterator();
         while (it.hasNext()) {
             Entity entity = it.next();
-            if (entity.position.x >= size || entity.position.y >= size) {
+            if (entity.getPosition().x >= size || entity.getPosition().y >= size) {
                 it.remove();
             }
         }
@@ -30,7 +31,7 @@ public class SimulationState {
     public void addCar(Car car) {
         List<Car> cars = getAllCars();
         for (Car c : cars) {
-            if (c.position.x == car.position.x && c.position.y == car.position.y) {
+            if (c.getPosition().equals(car)) {
                 return; //@fix : temporarily disable multiple cars at the same place
             }
         }
@@ -50,7 +51,7 @@ public class SimulationState {
     public void addPassenger(Passenger passenger) {
         List<Passenger> passengers = getAllPassengers();
         for (Passenger p : passengers) {
-            if (p.position.x == passenger.position.x && p.position.y == passenger.position.y) {
+            if (p.getPosition().equals(passenger)) {
                 return; //@fix : temporarily disable multiple passengers at the same place
             }
         }
@@ -71,7 +72,7 @@ public class SimulationState {
         Iterator<Entity> it = entities.iterator();
         while (it.hasNext()) {
             Entity entity = it.next();
-            if (entity.position.x == x && entity.position.y == y) {
+            if (entity.getPosition().equals(new Point(x, y))) {
                 it.remove();
             }
         }
