@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
 import javax.imageio.ImageIO;
+import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -45,39 +46,57 @@ public class CarSharing {
     private final JButton carTool = new JButton();
     private final JButton passengerTool = new JButton();
     
+    private class NewSimulationAction extends AbstractAction {
+        NewSimulationAction() {
+            super("New simulation");
+        }
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            simulationState.clear();
+            canvas.repaint();
+        }
+    }
+    
+    private class OpenSimulationAction extends AbstractAction {
+        OpenSimulationAction() {
+            super("Open simulation");
+        }
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            final JFileChooser fileChooser = new JFileChooser();
+                fileChooser.showOpenDialog(null);
+        }
+    }
+    
+    private class SaveSimulationAction extends AbstractAction {
+        SaveSimulationAction() {
+            super("Save simulation");
+        }
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            final JFileChooser fileChooser = new JFileChooser();
+            fileChooser.showSaveDialog(null);
+        }
+    }
+    
     public CarSharing() throws IOException {
         canvas = new Canvas(simulationState);
         final JMenuBar menuBar = new JMenuBar();
         final JMenu menuFile = new JMenu("File");
 
-        newSimulation = new JMenuItem("New simulation");
-        newSimulation.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                simulationState.clear();
-                canvas.repaint();
-            }
-        });
+        newSimulation = new JMenuItem();
+        newSimulation.setAction(new NewSimulationAction());
         menuFile.add(newSimulation);
 
-        openSimulation = new JMenuItem("Open simulation");
-        openSimulation.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                final JFileChooser fileChooser = new JFileChooser();
-                fileChooser.showOpenDialog(null);
-            }
-        });
+        openSimulation = new JMenuItem();
+        openSimulation.setAction(new OpenSimulationAction());
         menuFile.add(openSimulation);
 
-        saveSimulation = new JMenuItem("Save simulation");
-        saveSimulation.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                final JFileChooser fileChooser = new JFileChooser();
-                fileChooser.showSaveDialog(null);
-            }
-        });
+        saveSimulation = new JMenuItem();
+        saveSimulation.setAction(new SaveSimulationAction());
         menuFile.add(saveSimulation);
 
         menuFile.addSeparator();
