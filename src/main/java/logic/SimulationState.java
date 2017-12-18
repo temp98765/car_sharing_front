@@ -8,6 +8,8 @@ import java.util.List;
 public class SimulationState {    
     private final List<Entity> entities = new ArrayList<>();
     private int size = 10;
+    private static int staticCarId = 0;
+    private static int staticPassengerId = 0;
     
     public SimulationState() {
     }
@@ -31,10 +33,11 @@ public class SimulationState {
     public void addCar(Car car) {
         List<Car> cars = getAllCars();
         for (Car c : cars) {
-            if (c.getPosition().equals(car)) {
+            if (c.getPosition().equals(car.getPosition())) {
                 return; //@fix : temporarily disable multiple cars at the same place
             }
         }
+        car.setId(staticCarId++);
         entities.add(car);
     }
     
@@ -51,10 +54,11 @@ public class SimulationState {
     public void addPassenger(Passenger passenger) {
         List<Passenger> passengers = getAllPassengers();
         for (Passenger p : passengers) {
-            if (p.getPosition().equals(passenger)) {
+            if (p.getPosition().equals(passenger.getPosition())) {
                 return; //@fix : temporarily disable multiple passengers at the same place
             }
         }
+        passenger.setId(staticPassengerId++);
         entities.add(passenger);
     }
     
