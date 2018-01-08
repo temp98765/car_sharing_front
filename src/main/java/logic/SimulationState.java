@@ -21,13 +21,7 @@ public class SimulationState {
     public void setSize(int size) {
         assert(size > 3);
         this.size = size;
-        Iterator<Entity> it = entities.iterator();
-        while (it.hasNext()) {
-            Entity entity = it.next();
-            if (entity.getPosition().x >= size || entity.getPosition().y >= size) {
-                it.remove();
-            }
-        }
+        entities.clear();
     }
     
     public boolean addCar(Car car) {
