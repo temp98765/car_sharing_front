@@ -8,13 +8,13 @@ import logic.SimulationState;
 
 public class NewSimulationAction extends AbstractAction {
 
-    SimulationState simulationState;
-    Canvas canvas;
+    private final SimulationState simulationState;
+    private final Canvas canvas;
     
     public NewSimulationAction(SimulationState simulationState, Canvas canvas) {
-        super("New simulation");
         this.simulationState = simulationState;
         this.canvas = canvas;
+        putValue(NAME, "New simulation");
     }
     
     @Override

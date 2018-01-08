@@ -1,7 +1,10 @@
 package gui;
 
+import gui.action.CarAction;
+import gui.action.CursorAction;
 import gui.action.NewSimulationAction;
 import gui.action.OpenSimulationAction;
+import gui.action.PassengerAction;
 import gui.action.QuitAction;
 import gui.action.SaveSimulationAction;
 import logic.SimulationState;
@@ -102,34 +105,13 @@ public class CarSharing {
         
         final JToolBar toolBar = new JToolBar();
         
-        cursorTool.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("/cursor.png"))));
-        cursorTool.setToolTipText("Cursor. Right click to delete any entity in the tile.");
-        cursorTool.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                canvas.setCurrentTool(CanvasTool.TOOL_CURSOR);
-            }
-        });
+        cursorTool.setAction(new CursorAction(canvas));
         toolBar.add(cursorTool);
 
-        carTool.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("/car.png"))));
-        carTool.setToolTipText("Car. Add Car with left click. Right click to delete any entity in the tile.");
-        carTool.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                canvas.setCurrentTool(CanvasTool.TOOL_NEW_CAR);
-            }
-        });
+        carTool.setAction(new CarAction(canvas));
         toolBar.add(carTool);
 
-        passengerTool.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("/passenger.png"))));
-        passengerTool.setToolTipText("Passenger. Add passenger with left click. Right click to delete any entity in the tile.");
-        passengerTool.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                canvas.setCurrentTool(CanvasTool.TOOL_NEW_PASSENGER);
-            }
-        });
+        passengerTool.setAction(new PassengerAction(canvas));
         toolBar.add(passengerTool);
         
         

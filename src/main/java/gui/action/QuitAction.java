@@ -7,7 +7,7 @@ import javax.swing.AbstractAction;
 public class QuitAction extends AbstractAction {
 
     public QuitAction() {
-        super("Quit");
+        putValue(NAME, "Quit");
     }
 
     @Override

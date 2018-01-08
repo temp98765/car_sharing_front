@@ -8,7 +8,7 @@ import javax.swing.JFileChooser;
 public class SaveSimulationAction extends AbstractAction {
 
     public SaveSimulationAction() {
-        super("Save simulation");
+        putValue(NAME, "Save simulation");
     }
     
     @Override
