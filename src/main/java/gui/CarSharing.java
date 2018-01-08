@@ -1,5 +1,9 @@
 package gui;
 
+import gui.action.NewSimulationAction;
+import gui.action.OpenSimulationAction;
+import gui.action.QuitAction;
+import gui.action.SaveSimulationAction;
 import logic.SimulationState;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -46,41 +50,6 @@ public class CarSharing {
     private final JButton carTool = new JButton();
     private final JButton passengerTool = new JButton();
     
-    private class NewSimulationAction extends AbstractAction {
-        NewSimulationAction() {
-            super("New simulation");
-        }
-        
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            simulationState.clear();
-            canvas.repaint();
-        }
-    }
-    
-    private class OpenSimulationAction extends AbstractAction {
-        OpenSimulationAction() {
-            super("Open simulation");
-        }
-        
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            final JFileChooser fileChooser = new JFileChooser();
-                fileChooser.showOpenDialog(null);
-        }
-    }
-    
-    private class SaveSimulationAction extends AbstractAction {
-        SaveSimulationAction() {
-            super("Save simulation");
-        }
-        
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            final JFileChooser fileChooser = new JFileChooser();
-            fileChooser.showSaveDialog(null);
-        }
-    }
     
     public CarSharing() throws IOException {
         canvas = new Canvas(simulationState);
@@ -88,7 +57,7 @@ public class CarSharing {
         final JMenu menuFile = new JMenu("File");
 
         newSimulation = new JMenuItem();
-        newSimulation.setAction(new NewSimulationAction());
+        newSimulation.setAction(new NewSimulationAction(simulationState, canvas));
         menuFile.add(newSimulation);
 
         openSimulation = new JMenuItem();
@@ -100,14 +69,9 @@ public class CarSharing {
         menuFile.add(saveSimulation);
 
         menuFile.addSeparator();
-
-        quit = new JMenuItem("Quit");
-        quit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
+        
+        quit = new JMenuItem();
+        quit.setAction(new QuitAction());
         menuFile.add(quit);
 
         menuBar.add(menuFile);
