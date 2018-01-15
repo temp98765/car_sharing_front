@@ -9,6 +9,10 @@ import gui.action.QuitAction;
 import gui.action.SaveSimulationAction;
 import logic.SimulationState;
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.io.IOException;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -24,6 +28,8 @@ import javax.swing.JToolBar;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.Box;
+import javax.swing.JCheckBox;
 
 public class CarSharing extends JFrame {
     private final JMenuItem newSimulation;
@@ -68,28 +74,46 @@ public class CarSharing extends JFrame {
 
         menuBar.add(menuFile);
         
+        JPanel leftColumn = new JPanel();
+        leftColumn.setLayout(new BoxLayout(leftColumn,BoxLayout.PAGE_AXIS));
         
-        final JPanel leftColumn = new JPanel();
-        leftColumn.setLayout(new BoxLayout(leftColumn,BoxLayout.Y_AXIS));
-
-        leftColumn.add(new JLabel("Size :"));
+        JPanel algorithmeLayout = new JPanel();
+        JLabel algorithmeLabel = new JLabel("Algorithme :");
+        leftColumn.add(algorithmeLabel);
+        final String[] algosString = {"Deterministic" , "Simulated Annealing", "Genetic"};
+        final JComboBox algos = new JComboBox(algosString);
+        algos.setMaximumSize(new Dimension(200, 30));
+        algorithmeLayout.setLayout(new BoxLayout(algorithmeLayout,BoxLayout.LINE_AXIS));
+        algorithmeLayout.setAlignmentX(Component.LEFT_ALIGNMENT);
+        algorithmeLayout.add(algos);
+        leftColumn.add(algorithmeLayout);
+        
+        leftColumn.add(Box.createRigidArea(new Dimension(0, 10)));
+        
+        JPanel sizeLayout = new JPanel();
+        JLabel sizeLabel = new JLabel("Size : ");
+        leftColumn.add(sizeLabel);
         size.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
                 simulationState.setSize((int) size.getValue());
                 canvas.repaint();
             }
-            
         });
-        leftColumn.add(size);
-
-        leftColumn.add(new JLabel("Algorithm :"));
-        final String[] algosString = {"Deterministic" , "Simulated Annealing", "Genetic"};
-        final JComboBox algos = new JComboBox(algosString);
-        leftColumn.add(algos);
-
-        leftColumn.add(step);
-        leftColumn.add(solve);
+        size.setMaximumSize(new Dimension(200, 30));
+        sizeLayout.setLayout(new BoxLayout(sizeLayout,BoxLayout.LINE_AXIS));
+        sizeLayout.setAlignmentX(Component.LEFT_ALIGNMENT);
+        sizeLayout.add(size);
+        leftColumn.add(sizeLayout);
+        
+        leftColumn.add(Box.createRigidArea(new Dimension(0, 10)));
+        
+        JPanel solveLayout = new JPanel();
+        solveLayout.setLayout(new BoxLayout(solveLayout,BoxLayout.PAGE_AXIS));
+        sizeLayout.setAlignmentX(Component.LEFT_ALIGNMENT);
+        solveLayout.add(step);
+        solveLayout.add(solve);
+        leftColumn.add(solveLayout);
         
         
         final JToolBar toolBar = new JToolBar();
