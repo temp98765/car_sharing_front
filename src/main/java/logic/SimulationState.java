@@ -27,11 +27,6 @@ public class SimulationState {
     }
     
     public boolean addCar(Car car) {
-        for (Car c : cars) {
-            if (c.getPosition().equals(car.getPosition())) {
-                return false; //@fix : temporarily disable multiple cars at the same place
-            }
-        }
         car.setId(staticCarId++);
         cars.add(car);
         entities.add(car);
@@ -43,11 +38,6 @@ public class SimulationState {
     }
     
     public boolean addPassenger(Passenger passenger) {
-        for (Passenger p : passengers) {
-            if (p.getPosition().equals(passenger.getPosition())) {
-                return false; //@fix : temporarily disable multiple passengers at the same place
-            }
-        }
         passenger.setId(staticPassengerId++);
         passengers.add(passenger);
         entities.add(passenger);

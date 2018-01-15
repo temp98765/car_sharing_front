@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -139,9 +140,21 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
        int tileY = e.getY() / blockSize;
        
         if (e.getButton() == MouseEvent.BUTTON1) {
-            if (currentTool == CanvasTool.TOOL_NEW_CAR) {
+            if (currentTool == CanvasTool.TOOL_NEW_CAR) { 
+                List<Car> cars = simulationState.getAllCars();
+                for (Car c : cars) {
+                    if (c.getPosition().equals(new Point(tileX, tileY))) {
+                        return; //@fix : temporarily disable multiple cars at the same place
+                    }
+                }
                 simulationState.addCar(new Car(tileX, tileY));
             } else if (currentTool == CanvasTool.TOOL_NEW_PASSENGER) {
+                List<Passenger> passengers = simulationState.getAllPassengers();
+                for (Passenger p : passengers) {
+                    if (p.getPosition().equals(new Point(tileX, tileY))) {
+                        return; //@fix : temporarily disable multiple passengers at the same place
+                    }
+                }
                 simulationState.addPassenger(new Passenger(tileX, tileY));
             }
         } else if (e.getButton() == MouseEvent.BUTTON3) { 
