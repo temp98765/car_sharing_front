@@ -12,20 +12,20 @@ import static javax.swing.Action.SHORT_DESCRIPTION;
 import javax.swing.ImageIcon;
 
 
-public class PassengerAction extends AbstractAction {
+public class CarAction extends AbstractAction {
 
     private Canvas canvas;
     
-    public PassengerAction(Canvas canvas) throws IOException {
+    public CarAction(Canvas canvas) throws IOException {
         this.canvas = canvas;
-        putValue(NAME, "Passenger");
-        putValue(SHORT_DESCRIPTION, "Passenger. Add passenger with left click. Right click to delete any entity in the tile.");
-        putValue(LARGE_ICON_KEY, new ImageIcon(ImageIO.read(getClass().getResource("/passenger.png"))));
+        putValue(NAME, "Car");
+        putValue(SHORT_DESCRIPTION, "Car. Add Car with left click. Right click to delete any entity in the tile.");
+        putValue(LARGE_ICON_KEY, new ImageIcon(ImageIO.read(getClass().getResource("../car.png"))));
     }
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        canvas.setCurrentTool(CanvasTool.TOOL_NEW_PASSENGER);
+        canvas.setCurrentTool(CanvasTool.TOOL_NEW_CAR);
     }
     
 }

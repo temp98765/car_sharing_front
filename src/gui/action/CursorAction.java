@@ -16,7 +16,7 @@ public class CursorAction extends AbstractAction {
         this.canvas = canvas;
         putValue(NAME, "Cursor");
         putValue(SHORT_DESCRIPTION, "Cursor. Right click to delete any entity in the tile.");
-        putValue(LARGE_ICON_KEY, new ImageIcon(ImageIO.read(getClass().getResource("/cursor.png"))));
+        putValue(LARGE_ICON_KEY, new ImageIcon(ImageIO.read(getClass().getResource("../cursor.png"))));
     }
 
     @Override
