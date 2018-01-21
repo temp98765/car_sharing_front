@@ -1,7 +1,7 @@
 package gui.action;
 
 import gui.Canvas;
-import gui.CanvasTool;
+import gui.ToolState;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -21,6 +21,6 @@ public class CursorAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        canvas.setCurrentTool(CanvasTool.TOOL_CURSOR);
+        canvas.setCurrentTool(ToolState.CURSOR);
     }
 }

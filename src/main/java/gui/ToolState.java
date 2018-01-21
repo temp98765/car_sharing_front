@@ -5,8 +5,13 @@
  */
 package gui;
 
-public enum CanvasTool {
-    TOOL_CURSOR,
-    TOOL_NEW_CAR,
-    TOOL_NEW_PASSENGER,
+/**
+ *
+ * @author amiotj
+ */
+public enum ToolState {
+    CURSOR,
+    ADD_CAR,
+    ADD_PASSENGER,
+    ADD_DESTINATION_PASSENGER,
 }

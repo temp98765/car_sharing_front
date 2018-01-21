@@ -1,5 +1,6 @@
 package gui;
 
+import static gui.ToolState.*;
 import logic.Car;
 import logic.Passenger;
 import logic.SimulationState;
@@ -11,7 +12,12 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.List;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 public class Canvas extends JPanel implements MouseMotionListener, MouseListener {
@@ -22,7 +28,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
     
     private float mouseX = -1, mouseY = -1;
     
-    private CanvasTool currentTool = CanvasTool.TOOL_CURSOR;
+    private ToolState currentTool = CURSOR;
     
     public Canvas(SimulationState simulationState) {
         this.simulationState = simulationState;
@@ -33,7 +39,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
         addMouseListener(this);
     }
     
-    public void setCurrentTool(CanvasTool tool) {
+    public void setCurrentTool(ToolState tool) {
         currentTool = tool;
     }
     
@@ -76,13 +82,13 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
     }
     
     private void drawCar(Graphics g, int x, int y) {
-        g.setColor(Color.RED);
-        g.fillPolygon(new int[]{x, x + blockSize / 4, x + blockSize / 2, x + 3 * blockSize / 4, x + blockSize, x + blockSize, x},
-                      new int[]{y + blockSize / 2, y + blockSize / 4, y + blockSize / 4,
-                                y + blockSize / 2, y + blockSize / 2, y + 3 * blockSize / 4, y + 3 * blockSize / 4},
-                      7);
-        g.fillOval(x + 1 * blockSize / 8, y + 5 * blockSize / 8, blockSize / 4, blockSize /4);
-        g.fillOval(x + 5 * blockSize / 8, y + 5 * blockSize / 8, blockSize / 4, blockSize / 4);
+    	BufferedImage image;
+    	try {
+			image = ImageIO.read(getClass().getResource("car.png"));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+    	g.drawImage(image, x, y, blockSize, blockSize, null, null);
     }
     
     private void drawPassengers(Graphics g) {
@@ -96,15 +102,27 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
     }
     
     private void drawPassenger(Graphics g, int x, int y) {
-        g.setColor(Color.BLUE);
-        g.fillPolygon(new int[]{x + blockSize / 4, x + 3 * blockSize / 4, x + 3 * blockSize / 4, x + blockSize / 2, x + blockSize / 4},
-                      new int[]{ y + blockSize / 4, y + blockSize / 4, y + blockSize, y + 3 * blockSize / 4, y + blockSize},
-                      5);
-        g.fillOval(x + 3 * blockSize / 8, y, blockSize / 4, blockSize / 4);
+    	BufferedImage image;
+    	try {
+			image = ImageIO.read(getClass().getResource("passenger.png"));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+    	g.drawImage(image, x, y, blockSize, blockSize, null, null);
+    }
+    
+    private void drawFlag(Graphics g, int x, int y) {
+    	BufferedImage image;
+    	try {
+			image = ImageIO.read(getClass().getResource("flag.png"));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+    	g.drawImage(image, x, y, blockSize, blockSize, null, null);
     }
     
     private void drawId(Graphics g, int id, int x, int y) {
-        g.setColor(Color.BLACK);
+        g.setColor(Color.RED);
         //use a bigger font
         Font currentFont = g.getFont();
         Font newFont = currentFont.deriveFont(20f); //@fix : hardcoded size
@@ -114,9 +132,9 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
     
     private void drawCursor(Graphics g) {
         if (mouseX != -1 && mouseY != -1) {
-            if (currentTool == CanvasTool.TOOL_NEW_CAR) {
+            if (currentTool == ADD_CAR) {
                 drawCar(g, (int)mouseX, (int)mouseY);
-            } else if (currentTool == CanvasTool.TOOL_NEW_PASSENGER) {
+            } else if (currentTool == ADD_PASSENGER) {
                 drawPassenger(g, (int)mouseX, (int)mouseY);
             }
         }
@@ -140,7 +158,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
        int tileY = e.getY() / blockSize;
        
         if (e.getButton() == MouseEvent.BUTTON1) {
-            if (currentTool == CanvasTool.TOOL_NEW_CAR) { 
+            if (currentTool == ADD_CAR) { 
                 List<Car> cars = simulationState.getAllCars();
                 for (Car c : cars) {
                     if (c.getPosition().equals(new Point(tileX, tileY))) {
@@ -148,7 +166,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
                     }
                 }
                 simulationState.addCar(new Car(tileX, tileY));
-            } else if (currentTool == CanvasTool.TOOL_NEW_PASSENGER) {
+            } else if (currentTool == ADD_PASSENGER) {
                 List<Passenger> passengers = simulationState.getAllPassengers();
                 for (Passenger p : passengers) {
                     if (p.getPosition().equals(new Point(tileX, tileY))) {
