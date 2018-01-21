@@ -8,17 +8,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import logic.Destination;
+import logic.Entity;
 
 public class Canvas extends JPanel implements MouseMotionListener, MouseListener {
     private final SimulationState simulationState;
@@ -51,13 +50,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, getWidth(), getHeight());
         
-        drawGrid(g);
-        drawCars(g);
-        drawPassengers(g);
-        drawCursor(g);
-    }
-    
-    private void drawGrid(Graphics g) {
+        //draw grid
         g.setColor(Color.LIGHT_GRAY);
         for (int x = 0; x < WIDTH ; x++) {
             for (int y = 0; y < HEIGHT; y++) {
@@ -69,56 +62,78 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
                 }
             }
         }
-    }
-    
-    private void drawCars(Graphics g) {
-        List<Car> cars = simulationState.getAllCars();
-        for (Car car : cars) {
-            int pixelX = car.getPosition().x * blockSize;
-            int pixelY = car.getPosition().y * blockSize;
-            drawCar(g, pixelX, pixelY);
-            drawId(g, car.getId(), pixelX, pixelY);
+        
+        Entity[][] entities = simulationState.entities;
+        for (int i = 0; i < simulationState.getSize(); i++) {
+            for (int j = 0; j < simulationState.getSize(); j++) {
+                Entity entity = entities[i][j];
+                
+                if (entity == null) {
+                    continue;
+                }
+                
+                int x = entity.position.x * blockSize;
+                int y = entity.position.y * blockSize;
+                
+                if (entity instanceof Car) {
+                    drawCar(g, x, y);
+                    drawId(g, entity.id, x, y);
+                } else if (entity instanceof Passenger) {
+                    drawPassenger(g, x, y);
+                    drawId(g, entity.id, x, y);
+                } else if (entity instanceof Destination) {
+                    drawDestination(g, x, y);
+                    drawId(g, entity.id, x, y);
+                }
+            }  
+        }
+        
+        //Draw cursor
+        if (mouseX != -1 && mouseY != -1) {
+            switch (currentTool) {
+                case ADD_CAR:
+                    drawCar(g, (int)mouseX, (int)mouseY);
+                break;
+                case ADD_PASSENGER:
+                    drawPassenger(g, (int)mouseX, (int)mouseY);
+                break;
+                 case ADD_DESTINATION_PASSENGER:
+                    drawDestination(g, (int)mouseX, (int)mouseY);
+                break;
+            }
         }
     }
     
     private void drawCar(Graphics g, int x, int y) {
-    	BufferedImage image;
+        BufferedImage image;
     	try {
-			image = ImageIO.read(getClass().getResource("car.png"));
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+            image = ImageIO.read(getClass().getResource("car.png"));
+	} catch (IOException e) {
+            throw new RuntimeException(e);
+	}
     	g.drawImage(image, x, y, blockSize, blockSize, null, null);
-    }
-    
-    private void drawPassengers(Graphics g) {
-        List<Passenger> passengers = simulationState.getAllPassengers();
-        for (Passenger passenger : passengers) {
-            int pixelX = passenger.getPosition().x * blockSize;
-            int pixelY = passenger.getPosition().y * blockSize;
-            drawPassenger(g, pixelX, pixelY);
-            drawId(g, passenger.getId(), pixelX, pixelY);
-        }
     }
     
     private void drawPassenger(Graphics g, int x, int y) {
-    	BufferedImage image;
+        BufferedImage image;
     	try {
-			image = ImageIO.read(getClass().getResource("passenger.png"));
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+            image = ImageIO.read(getClass().getResource("passenger.png"));
+	} catch (IOException e) {
+            throw new RuntimeException(e);
+	}
     	g.drawImage(image, x, y, blockSize, blockSize, null, null);
+       
     }
     
-    private void drawFlag(Graphics g, int x, int y) {
-    	BufferedImage image;
+    private void drawDestination(Graphics g, int x, int y) {
+        BufferedImage image;
     	try {
-			image = ImageIO.read(getClass().getResource("flag.png"));
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+            image = ImageIO.read(getClass().getResource("flag.png"));
+	} catch (IOException e) {
+            throw new RuntimeException(e);
+	}
     	g.drawImage(image, x, y, blockSize, blockSize, null, null);
+        
     }
     
     private void drawId(Graphics g, int id, int x, int y) {
@@ -130,15 +145,6 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
         g.drawString("" + id, x, y + blockSize);
     }
     
-    private void drawCursor(Graphics g) {
-        if (mouseX != -1 && mouseY != -1) {
-            if (currentTool == ADD_CAR) {
-                drawCar(g, (int)mouseX, (int)mouseY);
-            } else if (currentTool == ADD_PASSENGER) {
-                drawPassenger(g, (int)mouseX, (int)mouseY);
-            }
-        }
-    }
 
     @Override
     public void mouseDragged(MouseEvent e) {
@@ -152,28 +158,29 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
         repaint();
     }
 
+    private Passenger passengerCurrentlyCreated = null;
+    
     @Override
     public void mouseClicked(MouseEvent e) {
        int tileX = e.getX() / blockSize;
        int tileY = e.getY() / blockSize;
        
         if (e.getButton() == MouseEvent.BUTTON1) {
-            if (currentTool == ADD_CAR) { 
-                List<Car> cars = simulationState.getAllCars();
-                for (Car c : cars) {
-                    if (c.getPosition().equals(new Point(tileX, tileY))) {
-                        return; //@fix : temporarily disable multiple cars at the same place
+            switch (currentTool) {
+                case ADD_CAR: {
+                    simulationState.addCar(tileX, tileY);
+                } break;
+                case ADD_PASSENGER: {
+                    passengerCurrentlyCreated = simulationState.addPassenger(tileX, tileY);
+                    if (passengerCurrentlyCreated != null) {
+                        setCurrentTool(ADD_DESTINATION_PASSENGER);
                     }
-                }
-                simulationState.addCar(new Car(tileX, tileY));
-            } else if (currentTool == ADD_PASSENGER) {
-                List<Passenger> passengers = simulationState.getAllPassengers();
-                for (Passenger p : passengers) {
-                    if (p.getPosition().equals(new Point(tileX, tileY))) {
-                        return; //@fix : temporarily disable multiple passengers at the same place
-                    }
-                }
-                simulationState.addPassenger(new Passenger(tileX, tileY));
+                } break;
+                case ADD_DESTINATION_PASSENGER: {
+                   if (simulationState.addDestination(tileX, tileY, passengerCurrentlyCreated)) {
+                       setCurrentTool(ADD_PASSENGER);
+                   }
+                } break;
             }
         } else if (e.getButton() == MouseEvent.BUTTON3) { 
             simulationState.removeAt(tileX, tileY);

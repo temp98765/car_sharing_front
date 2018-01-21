@@ -11,8 +11,6 @@ import logic.SimulationState;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.io.IOException;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -29,7 +27,6 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.Box;
-import javax.swing.JCheckBox;
 
 public class CarSharing extends JFrame {
     private final JMenuItem newSimulation;

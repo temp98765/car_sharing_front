@@ -1,17 +1,13 @@
 package logic;
 
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 public class SimulationState {    
-    private final List<Entity> entities = new ArrayList<>();
-    private final List<Car> cars = new ArrayList<>();
-    private final List<Passenger> passengers = new ArrayList<>();
+    
     private int size = 10;
+    public Entity[][] entities = new Entity[size][size];
+    
     private static int staticCarId = 0;
     private static int staticPassengerId = 0;
+    
     
     public SimulationState() {
     }
@@ -26,43 +22,54 @@ public class SimulationState {
         clear();
     }
     
-    public boolean addCar(Car car) {
-        car.setId(staticCarId++);
-        cars.add(car);
-        entities.add(car);
+    public void addCar(int x, int y) {
+        if (entities[x][y] != null) {
+            return;
+        }
+        Car car = new Car(x, y);
+        car.id = staticCarId++;
+        entities[x][y] = car;
+    }
+    
+    public Passenger addPassenger(int x, int y) {
+        if (entities[x][y] != null) {
+            return null;
+        }
+        Passenger passenger = new Passenger(x, y, null);
+        passenger.id = staticPassengerId++;
+        entities[x][y] = passenger;
+        return passenger;
+    }
+    
+    public boolean addDestination(int x, int y, Passenger passenger) {
+        if (entities[x][y] != null) {
+            return false;
+        }
+        Destination destination = new Destination(x, y, passenger);
+        destination.id = passenger.id;
+        assert(passenger.destination == null);
+        passenger.destination = destination;
+        entities[x][y] = destination;
         return true;
-    }
-    
-    public List<Car> getAllCars() {
-        return cars;
-    }
-    
-    public boolean addPassenger(Passenger passenger) {
-        passenger.setId(staticPassengerId++);
-        passengers.add(passenger);
-        entities.add(passenger);
-        return true;
-    }
-    
-    public List<Passenger> getAllPassengers() {
-        return passengers;
     }
     
     public void removeAt(int x, int y) {
-        Iterator<Entity> it = entities.iterator();
-        while (it.hasNext()) {
-            Entity entity = it.next();
-            if (entity.getPosition().equals(new Point(x, y))) {
-                cars.remove(entity);
-                passengers.remove(entity);
-                it.remove();
-            }
-        }
+       Entity entity = entities[x][y];
+       if (entity != null) {
+           if (entity instanceof Destination) {
+               ((Destination) entity).origin.destination = null;
+           }
+           entities[x][y] = null;
+       }
     }
     
     public void clear() {
-        cars.clear();
-        passengers.clear();
-        entities.clear();
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                entities[i][j] = null;
+            }  
+        }
+        staticCarId = 0;
+        staticPassengerId = 0;
     }
 }

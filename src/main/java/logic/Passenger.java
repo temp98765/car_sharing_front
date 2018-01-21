@@ -1,25 +1,11 @@
 package logic;
 
-import java.awt.Point;
-
 public class Passenger extends Entity {
     
-	private Point destination;
+    public Destination destination;
 	
-    public Passenger(int x, int y) {
+    public Passenger(int x, int y, Destination destination) {
         super(x, y);
+        this.destination = destination;
     }
-    
-    @Override
-    public String toString() {
-        return "Passenger {id = " + getId() + " position = (" + getPosition().x + ", " + getPosition().y + ")}";
-    }
-
-	public Point getDestination() {
-		return destination;
-	}
-
-	public void setDestination(Point destination) {
-		this.destination = destination;
-	}
 }
