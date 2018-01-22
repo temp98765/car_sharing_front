@@ -54,11 +54,21 @@ public class SimulationState {
     }
     
     public void removeAt(int x, int y) {
-       Entity entity = entities[x][y];
-       if (entity != null) {
-           if (entity instanceof Destination) {
-               ((Destination) entity).origin.destination = null;
-           }
+        Entity entity = entities[x][y];
+        if (entity != null) {
+            if (entity instanceof Passenger) {
+                Passenger passenger = (Passenger) entity;
+                if (passenger.destination != null) {
+                    entities[passenger.destination.position.x][passenger.destination.position.y] = null;
+                    passenger.destination = null;
+                }
+            } else if (entity instanceof Destination) {
+                Destination destination = (Destination) entity;
+                if (destination.origin != null) {
+                    entities[destination.origin.position.x][destination.origin.position.y] = null;
+                    destination.origin = null;
+                }
+            }
            entities[x][y] = null;
        }
     }
