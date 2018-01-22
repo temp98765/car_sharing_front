@@ -11,6 +11,8 @@ import logic.SimulationState;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -27,6 +29,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.Box;
+import logic.TestAlgo;
 
 public class CarSharing extends JFrame {
     private final JMenuItem newSimulation;
@@ -77,7 +80,8 @@ public class CarSharing extends JFrame {
         JPanel algorithmeLayout = new JPanel();
         JLabel algorithmeLabel = new JLabel("Algorithme :");
         leftColumn.add(algorithmeLabel);
-        final String[] algosString = {"Deterministic" , "Simulated Annealing", "Genetic"};
+        //final String[] algosString = {"Deterministic" , "Simulated Annealing", "Genetic"};
+        final String[] algosString = {"Test Algo"};
         final JComboBox algos = new JComboBox(algosString);
         algos.setMaximumSize(new Dimension(200, 30));
         algorithmeLayout.setLayout(new BoxLayout(algorithmeLayout,BoxLayout.LINE_AXIS));
@@ -108,6 +112,13 @@ public class CarSharing extends JFrame {
         JPanel solveLayout = new JPanel();
         solveLayout.setLayout(new BoxLayout(solveLayout,BoxLayout.PAGE_AXIS));
         sizeLayout.setAlignmentX(Component.LEFT_ALIGNMENT);
+        step.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TestAlgo.step(simulationState);
+                canvas.repaint();
+            }
+        });
         solveLayout.add(step);
         solveLayout.add(solve);
         leftColumn.add(solveLayout);
