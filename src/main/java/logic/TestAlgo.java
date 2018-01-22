@@ -52,7 +52,7 @@ public class TestAlgo {
                     c.position.x++;
                 } else if (c.position.y > c.target.position.y) {
                     c.position.y--;
-                } else  if (c.position.x < c.target.position.y) {
+                } else  if (c.position.y < c.target.position.y) {
                     c.position.y++;
                 }
                 
