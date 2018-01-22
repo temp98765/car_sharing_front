@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -184,6 +185,9 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
             }
         } else if (e.getButton() == MouseEvent.BUTTON3) { 
             simulationState.removeAt(tileX, tileY);
+            if (currentTool == ADD_DESTINATION_PASSENGER && passengerCurrentlyCreated != null && passengerCurrentlyCreated.position.equals(new Point(tileX, tileY))) {
+                currentTool = ADD_PASSENGER;
+            }
         }
         repaint();
     }
