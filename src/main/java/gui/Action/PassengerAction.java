@@ -2,6 +2,7 @@ package gui.action;
 
 import gui.Canvas;
 import static gui.ToolState.ADD_PASSENGER;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -20,7 +21,7 @@ public class PassengerAction extends AbstractAction {
         this.canvas = canvas;
         putValue(NAME, "Passenger");
         putValue(SHORT_DESCRIPTION, "Passenger. Add passenger with left click. Right click to delete any entity in the tile.");
-        putValue(LARGE_ICON_KEY, new ImageIcon(ImageIO.read(getClass().getResource("../passenger.png"))));
+        putValue(LARGE_ICON_KEY, new ImageIcon(new ImageIcon(getClass().getResource("../passenger.png")).getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH)));
     }
     
     @Override

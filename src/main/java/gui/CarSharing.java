@@ -1,5 +1,6 @@
 package gui;
 
+import gui.Action.MoveAction;
 import gui.action.CarAction;
 import gui.action.CursorAction;
 import gui.action.NewSimulationAction;
@@ -47,6 +48,7 @@ public class CarSharing extends JFrame {
     private final JButton cursorTool = new JButton();
     private final JButton carTool = new JButton();
     private final JButton passengerTool = new JButton();
+     private final JButton moveTool = new JButton();
     
     
     public CarSharing() throws IOException {
@@ -135,6 +137,8 @@ public class CarSharing extends JFrame {
         passengerTool.setAction(new PassengerAction(canvas));
         toolBar.add(passengerTool);
         
+        moveTool.setAction(new MoveAction(canvas));
+        toolBar.add(moveTool);
         
         final JPanel container = new JPanel();
         container.setLayout(new BorderLayout());
