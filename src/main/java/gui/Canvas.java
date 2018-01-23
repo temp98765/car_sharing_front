@@ -28,7 +28,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
     
     private float mouseX = -1, mouseY = -1;
     
-    private ToolState currentTool = CURSOR;
+    private ToolState currentToolState = CURSOR;
     
     public Canvas(SimulationState simulationState) {
         this.simulationState = simulationState;
@@ -40,7 +40,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
     }
     
     public void setCurrentTool(ToolState tool) {
-        currentTool = tool;
+        currentToolState = tool;
     }
     
     @Override
@@ -91,7 +91,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
         
         //Draw cursor
         if (mouseX != -1 && mouseY != -1) {
-            switch (currentTool) {
+            switch (currentToolState) {
                 case ADD_CAR:
                     drawCar(g, (int)mouseX, (int)mouseY);
                 break;
@@ -146,10 +146,10 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
         g.drawString("" + id, x, y + blockSize);
     }
     
-
+    
+    
     @Override
     public void mouseDragged(MouseEvent e) {
-       
     }
 
     @Override
@@ -167,7 +167,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
        int tileY = e.getY() / blockSize;
        
         if (e.getButton() == MouseEvent.BUTTON1) {
-            switch (currentTool) {
+            switch (currentToolState) {
                 case ADD_CAR: {
                     simulationState.addCar(tileX, tileY);
                 } break;
@@ -185,21 +185,47 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
             }
         } else if (e.getButton() == MouseEvent.BUTTON3) { 
             simulationState.removeAt(tileX, tileY);
-            if (currentTool == ADD_DESTINATION_PASSENGER && passengerCurrentlyCreated != null && passengerCurrentlyCreated.position.equals(new Point(tileX, tileY))) {
-                currentTool = ADD_PASSENGER;
+            if (currentToolState == ADD_DESTINATION_PASSENGER && passengerCurrentlyCreated != null && passengerCurrentlyCreated.position.equals(new Point(tileX, tileY))) {
+                currentToolState = ADD_PASSENGER;
             }
         }
         repaint();
     }
 
+    Entity entityGrabbed = null;
+    
     @Override
     public void mousePressed(MouseEvent e) {
-        
+        if (currentToolState == CAN_MOVE) {
+            int tileX = e.getX() / blockSize;
+            int tileY = e.getY() / blockSize;
+            if (tileX >=0 && tileX < simulationState.getSize() &&
+                tileY >=0 && tileY < simulationState.getSize())
+            {
+                entityGrabbed = simulationState.entities[tileX][tileY];
+                if (entityGrabbed != null) {
+                    currentToolState = CURRENTLY_MOVING;
+                }
+            }
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        
+        if (currentToolState == CURRENTLY_MOVING) {
+            currentToolState = CAN_MOVE;
+            int tileX = e.getX() / blockSize;
+            int tileY = e.getY() / blockSize;
+            if (tileX >=0 && tileX < simulationState.getSize() &&
+                tileY >=0 && tileY < simulationState.getSize() &&
+                simulationState.entities[tileX][tileY] == null) 
+            {
+                simulationState.entities[entityGrabbed.position.x][entityGrabbed.position.y] = null;
+                simulationState.entities[tileX][tileY] = entityGrabbed;
+                entityGrabbed.position = new Point(tileX, tileY);
+                repaint();
+            }
+        }
     }
 
     @Override

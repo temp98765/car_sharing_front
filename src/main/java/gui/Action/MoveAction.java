@@ -26,7 +26,7 @@ public class MoveAction extends AbstractAction {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        canvas.setCurrentTool(ToolState.MOVE);
+        canvas.setCurrentTool(ToolState.CAN_MOVE);
     }
     
 }

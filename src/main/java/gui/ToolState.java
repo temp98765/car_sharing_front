@@ -5,5 +5,6 @@ public enum ToolState {
     ADD_CAR,
     ADD_PASSENGER,
     ADD_DESTINATION_PASSENGER,
-    MOVE,
+    CAN_MOVE,
+    CURRENTLY_MOVING,
 }
