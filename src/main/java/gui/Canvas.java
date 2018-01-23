@@ -68,24 +68,11 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
         for (int i = 0; i < simulationState.getSize(); i++) {
             for (int j = 0; j < simulationState.getSize(); j++) {
                 Entity entity = entities[i][j];
-                
                 if (entity == null) {
                     continue;
                 }
                 
-                int x = entity.position.x * blockSize;
-                int y = entity.position.y * blockSize;
-                
-                if (entity instanceof Car) {
-                    drawCar(g, x, y);
-                    drawId(g, entity.id, x, y);
-                } else if (entity instanceof Passenger) {
-                    drawPassenger(g, x, y);
-                    drawId(g, entity.id, x, y);
-                } else if (entity instanceof Destination) {
-                    drawDestination(g, x, y);
-                    drawId(g, entity.id, x, y);
-                }
+                drawEntity(g, entity, null);
             }  
         }
         
@@ -98,10 +85,37 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
                 case ADD_PASSENGER:
                     drawPassenger(g, (int)mouseX, (int)mouseY);
                 break;
-                 case ADD_DESTINATION_PASSENGER:
+                case ADD_DESTINATION_PASSENGER:
                     drawDestination(g, (int)mouseX, (int)mouseY);
                 break;
+                 case CURRENTLY_MOVING:
+                    assert(entityGrabbed != null);
+                    drawEntity(g, entityGrabbed, new Point((int)mouseX, (int)mouseY));
+                break;
             }
+        }
+    }
+    
+    private void drawEntity(Graphics g, Entity entity, Point position) {
+        int x;
+        int y;
+        if (position == null) {
+            x = entity.position.x * blockSize;
+            y = entity.position.y * blockSize;
+        } else {
+            x = position.x;
+            y = position.y;
+        }
+
+        if (entity instanceof Car) {
+            drawCar(g, x, y);
+            drawId(g, entity.id, x, y);
+        } else if (entity instanceof Passenger) {
+            drawPassenger(g, x, y);
+            drawId(g, entity.id, x, y);
+        } else if (entity instanceof Destination) {
+            drawDestination(g, x, y);
+            drawId(g, entity.id, x, y);
         }
     }
     
@@ -150,6 +164,12 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
     
     @Override
     public void mouseDragged(MouseEvent e) {
+        if (currentToolState == CURRENTLY_MOVING) {
+            mouseX = e.getX();
+            mouseY = e.getY();
+            repaint();
+            
+        }
     }
 
     @Override
