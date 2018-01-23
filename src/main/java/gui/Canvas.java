@@ -65,13 +65,26 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
         }
         
         Entity[][] entities = simulationState.entities;
-        for (int i = 0; i < simulationState.getSize(); i++) {
-            for (int j = 0; j < simulationState.getSize(); j++) {
-                Entity entity = entities[i][j];
+        for (int x = 0; x < simulationState.getSize(); x++) {
+            for (int y = 0; y < simulationState.getSize(); y++) {
+                Entity entity = entities[x][y];
                 if (entity == null) {
                     continue;
                 }
-                
+                if (entity instanceof Car) {
+                    Car car = (Car) entity;
+                    g.setColor(Color.blue);
+                    int halfSize = blockSize / 2;
+                    for (int i = 0; i < car.pastMove.size(); i++) {
+                        if (i == car.pastMove.size()-1) {
+                            g.drawLine(car.pastMove.get(i).x * blockSize + halfSize, car.pastMove.get(i).y * blockSize + halfSize,
+                                       car.position.x * blockSize + halfSize, car.position.y * blockSize + halfSize);
+                        } else {
+                            g.drawLine(car.pastMove.get(i).x * blockSize + halfSize, car.pastMove.get(i).y * blockSize + halfSize,
+                                       car.pastMove.get(i+1).x * blockSize + halfSize, car.pastMove.get(i+1).y * blockSize + halfSize);
+                        }
+                    }
+                }
                 drawEntity(g, entity, null);
             }  
         }
@@ -88,7 +101,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
                 case ADD_DESTINATION_PASSENGER:
                     drawDestination(g, (int)mouseX, (int)mouseY);
                 break;
-                 case CURRENTLY_MOVING:
+                case CURRENTLY_MOVING:
                     assert(entityGrabbed != null);
                     drawEntity(g, entityGrabbed, new Point((int)mouseX, (int)mouseY));
                 break;

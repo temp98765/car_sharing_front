@@ -70,6 +70,7 @@ public class TestAlgo {
                 }
                 
                 if (!oldPosition.equals(c.position)) {
+                    c.pastMove.add(oldPosition);
                     state.entities[oldPosition.x][oldPosition.y] = null;
                     assert(state.entities[c.position.x][c.position.y] == null);
                     state.entities[c.position.x][c.position.y] = c;
