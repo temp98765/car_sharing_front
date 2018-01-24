@@ -256,6 +256,9 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
                 simulationState.entities[entityGrabbed.position.x][entityGrabbed.position.y] = null;
                 simulationState.entities[tileX][tileY] = entityGrabbed;
                 entityGrabbed.position = new Point(tileX, tileY);
+                if (entityGrabbed instanceof Car) {
+                    ((Car) entityGrabbed).pastMove.clear();
+                }
                 repaint();
             }
         }
