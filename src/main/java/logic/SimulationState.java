@@ -19,7 +19,9 @@ public class SimulationState {
     public void setSize(int size) {
         assert(size > 3);
         this.size = size;
-        clear();
+        entities = new Entity[size][size];
+        staticCarId = 0;
+        staticPassengerId = 0;
     }
     
     public void addCar(int x, int y) {
