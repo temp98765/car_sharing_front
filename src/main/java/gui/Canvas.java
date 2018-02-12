@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+import logic.Controler;
 import logic.Destination;
 import logic.Entity;
 
@@ -66,7 +67,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
             }
         }
         
-        Entity[][] entities = simulationState.entities;
+        Entity[][] entities = simulationState.getEntities();
         for (int x = 0; x < simulationState.getSize(); x++) {
             for (int y = 0; y < simulationState.getSize(); y++) {
                 Entity entity = entities[x][y];
@@ -207,26 +208,26 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
                     if (tileX >=0 && tileX < simulationState.getSize() &&
                         tileY >=0 && tileY < simulationState.getSize())
                     {
-                        inspector.setSelectedEntity(simulationState.entities[tileX][tileY]);
+                        inspector.setSelectedEntity(simulationState.getEntities()[tileX][tileY]);
                     }
                 } break;
                 case ADD_CAR: {
-                    simulationState.addCar(tileX, tileY);
+                    Controler.addCar(simulationState, tileX, tileY);
                 } break;
                 case ADD_PASSENGER: {
-                    passengerCurrentlyCreated = simulationState.addPassenger(tileX, tileY);
+                    passengerCurrentlyCreated = Controler.addPassenger(simulationState, tileX, tileY);
                     if (passengerCurrentlyCreated != null) {
                         setCurrentTool(ADD_DESTINATION_PASSENGER);
                     }
                 } break;
                 case ADD_DESTINATION_PASSENGER: {
-                   if (simulationState.addDestination(tileX, tileY, passengerCurrentlyCreated)) {
+                   if (Controler.addDestination(simulationState, tileX, tileY, passengerCurrentlyCreated)) {
                        setCurrentTool(ADD_PASSENGER);
                    }
                 } break;
             }
         } else if (e.getButton() == MouseEvent.BUTTON3) { 
-            simulationState.removeAt(tileX, tileY);
+            Controler.removeAt(simulationState, tileX, tileY);
             if (currentToolState == ADD_DESTINATION_PASSENGER && passengerCurrentlyCreated != null && passengerCurrentlyCreated.position.equals(new Point(tileX, tileY))) {
                 currentToolState = ADD_PASSENGER;
             }
@@ -241,13 +242,9 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
         if (currentToolState == CAN_MOVE) {
             int tileX = e.getX() / blockSize;
             int tileY = e.getY() / blockSize;
-            if (tileX >=0 && tileX < simulationState.getSize() &&
-                tileY >=0 && tileY < simulationState.getSize())
-            {
-                entityGrabbed = simulationState.entities[tileX][tileY];
-                if (entityGrabbed != null) {
-                    currentToolState = CURRENTLY_MOVING;
-                }
+            entityGrabbed = Controler.grabAt(simulationState, tileX, tileY);
+            if (entityGrabbed != null) {
+                currentToolState = CURRENTLY_MOVING;
             }
         }
     }
@@ -255,19 +252,11 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
     @Override
     public void mouseReleased(MouseEvent e) {
         if (currentToolState == CURRENTLY_MOVING) {
+            assert(entityGrabbed != null);
             currentToolState = CAN_MOVE;
             int tileX = e.getX() / blockSize;
             int tileY = e.getY() / blockSize;
-            if (tileX >=0 && tileX < simulationState.getSize() &&
-                tileY >=0 && tileY < simulationState.getSize() &&
-                simulationState.entities[tileX][tileY] == null) 
-            {
-                simulationState.entities[entityGrabbed.position.x][entityGrabbed.position.y] = null;
-                simulationState.entities[tileX][tileY] = entityGrabbed;
-                entityGrabbed.position = new Point(tileX, tileY);
-                if (entityGrabbed instanceof Car) {
-                    ((Car) entityGrabbed).pastMove.clear();
-                }
+            if (Controler.moveAt(simulationState, entityGrabbed, tileX, tileY)) {
                 repaint();
             }
         }
