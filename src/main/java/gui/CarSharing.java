@@ -30,6 +30,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.Box;
+import logic.Algo;
 import logic.Controler;
 import logic.TestAlgo;
 
@@ -46,11 +47,12 @@ public class CarSharing extends JFrame {
     private final SimulationState simulationState = new SimulationState();
     private final Controler controler = new Controler(simulationState);
     private final Canvas canvas;
+    private final Algo currentAlgo = new TestAlgo();
     
     private final JButton cursorTool = new JButton();
     private final JButton carTool = new JButton();
     private final JButton passengerTool = new JButton();
-     private final JButton moveTool = new JButton();
+    private final JButton moveTool = new JButton();
     
     
     public CarSharing() throws IOException {
@@ -120,7 +122,7 @@ public class CarSharing extends JFrame {
         step.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                TestAlgo.step(simulationState);
+                currentAlgo.step(simulationState);
                 canvas.repaint();
             }
         });

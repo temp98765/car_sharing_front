@@ -4,9 +4,9 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestAlgo {
+public class TestAlgo implements Algo {
     
-    private static boolean isTargeted(Entity entity, List<Car> cars) {
+    private boolean isTargeted(Entity entity, List<Car> cars) {
         for (Car c : cars) {
             if (c.target != null && c.target.equals(entity)) {
                 return true;
@@ -15,7 +15,7 @@ public class TestAlgo {
         return false;
     }
     
-    public static void step(SimulationState state) {
+    public void step(SimulationState state) {
         List<Car> cars = new ArrayList<>();
         List<Passenger> passengers = new ArrayList<>();
         for (int i = 0; i < state.size; i++) {
