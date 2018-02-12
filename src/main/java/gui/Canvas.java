@@ -22,7 +22,7 @@ import logic.Destination;
 import logic.Entity;
 
 public class Canvas extends JPanel implements MouseMotionListener, MouseListener {
-    private final SimulationState simulationState;
+    private final Controler controlerSimultaion;
     private final static int WIDTH = 600;
     private final static int HEIGHT = 600;
     private int blockSize;
@@ -32,8 +32,8 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
     private ToolState currentToolState = CURSOR;
     private Inspector inspector;
     
-    public Canvas(SimulationState simulationState, Inspector inspector) {
-        this.simulationState = simulationState;
+    public Canvas(Controler controlerSimultaion, Inspector inspector) {
+        this.controlerSimultaion = controlerSimultaion;
         this.inspector = inspector;
        
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -48,7 +48,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
     
     @Override
     public void paintComponent(Graphics g) {
-        blockSize = WIDTH / simulationState.getSize();
+        blockSize = WIDTH / controlerSimultaion.getSize();
 
         //clear
         g.setColor(Color.WHITE);
@@ -67,9 +67,9 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
             }
         }
         
-        Entity[][] entities = simulationState.getEntities();
-        for (int x = 0; x < simulationState.getSize(); x++) {
-            for (int y = 0; y < simulationState.getSize(); y++) {
+        Entity[][] entities = controlerSimultaion.getEntities();
+        for (int x = 0; x < controlerSimultaion.getSize(); x++) {
+            for (int y = 0; y < controlerSimultaion.getSize(); y++) {
                 Entity entity = entities[x][y];
                 if (entity == null) {
                     continue;
@@ -205,29 +205,28 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
         if (e.getButton() == MouseEvent.BUTTON1) {
             switch (currentToolState) {
                 case CURSOR: {
-                    if (tileX >=0 && tileX < simulationState.getSize() &&
-                        tileY >=0 && tileY < simulationState.getSize())
-                    {
-                        inspector.setSelectedEntity(simulationState.getEntities()[tileX][tileY]);
+                    Entity entity = controlerSimultaion.grabAt(tileX, tileY);
+                    if (entity != null) {
+                        inspector.setSelectedEntity(entity);
                     }
                 } break;
                 case ADD_CAR: {
-                    Controler.addCar(simulationState, tileX, tileY);
+                    controlerSimultaion.addCar(tileX, tileY);
                 } break;
                 case ADD_PASSENGER: {
-                    passengerCurrentlyCreated = Controler.addPassenger(simulationState, tileX, tileY);
+                    passengerCurrentlyCreated = controlerSimultaion.addPassenger(tileX, tileY);
                     if (passengerCurrentlyCreated != null) {
                         setCurrentTool(ADD_DESTINATION_PASSENGER);
                     }
                 } break;
                 case ADD_DESTINATION_PASSENGER: {
-                   if (Controler.addDestination(simulationState, tileX, tileY, passengerCurrentlyCreated)) {
+                   if (controlerSimultaion.addDestination(tileX, tileY, passengerCurrentlyCreated)) {
                        setCurrentTool(ADD_PASSENGER);
                    }
                 } break;
             }
         } else if (e.getButton() == MouseEvent.BUTTON3) { 
-            Controler.removeAt(simulationState, tileX, tileY);
+            controlerSimultaion.removeAt(tileX, tileY);
             if (currentToolState == ADD_DESTINATION_PASSENGER && passengerCurrentlyCreated != null && passengerCurrentlyCreated.position.equals(new Point(tileX, tileY))) {
                 currentToolState = ADD_PASSENGER;
             }
@@ -242,7 +241,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
         if (currentToolState == CAN_MOVE) {
             int tileX = e.getX() / blockSize;
             int tileY = e.getY() / blockSize;
-            entityGrabbed = Controler.grabAt(simulationState, tileX, tileY);
+            entityGrabbed = controlerSimultaion.grabAt(tileX, tileY);
             if (entityGrabbed != null) {
                 currentToolState = CURRENTLY_MOVING;
             }
@@ -256,7 +255,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
             currentToolState = CAN_MOVE;
             int tileX = e.getX() / blockSize;
             int tileY = e.getY() / blockSize;
-            if (Controler.moveAt(simulationState, entityGrabbed, tileX, tileY)) {
+            if (controlerSimultaion.moveAt(entityGrabbed, tileX, tileY)) {
                 repaint();
             }
         }

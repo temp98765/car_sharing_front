@@ -5,77 +5,124 @@ import java.awt.Point;
 
 public class Controler {
     
-    public static boolean addCar(SimulationState state, int x, int y) {
-        if (state.getEntities()[x][y] != null) {
+    private SimulationState simulation;
+    private int carId = 0;
+    private int passengerId = 0;
+    
+    public Controler(SimulationState simulation) {
+        this.simulation = simulation;
+    }
+    
+    public Entity[][] getEntities() {
+        return simulation.entities;
+    }
+    
+    public boolean addCar(int x, int y) {
+        if (simulation.entities[x][y] != null) {
             return false;
         }
-        state.addCar(x, y);
+        Car car = new Car(x, y);
+        car.id = carId++;
+        simulation.entities[x][y] = car;
         return true;
     }
     
-    public static Passenger addPassenger(SimulationState state, int x, int y) {
-        if (state.getEntities()[x][y] != null) {
+    public Passenger addPassenger(int x, int y) {
+        if (simulation.entities[x][y] != null) {
             return null;
         }
-        return state.addPassenger(x, y);
+        Passenger passenger = new Passenger(x, y, null);
+        passenger.id = passengerId++;
+        simulation.entities[x][y] = passenger;
+        return passenger;
     }
      
-    public static boolean addDestination(SimulationState state, int x, int y, Passenger passenger) {
-        if (state.getEntities()[x][y] != null) {
+    public boolean addDestination(int x, int y, Passenger passenger) {
+        if (simulation.entities[x][y] != null) {
             return false;
         }
-        return state.addDestination(x, y, passenger);
+        Destination destination = new Destination(x, y, passenger);
+        destination.id = passenger.id;
+        assert(passenger.destination == null);
+        passenger.destination = destination;
+        simulation.entities[x][y] = destination;
+        return true;
     }
     
-    private static boolean checkIfCoordAreInBound(SimulationState state, int x, int y) {
-        return x >= 0 & x < state.getSize() && y >= 0 && y < state.getSize();
+    private boolean checkIfCoordAreInBound(int x, int y) {
+        return x >= 0 & x < getSize() && y >= 0 && y < getSize();
     }
     
-    public static boolean removeAt(SimulationState state, int x, int y) {
-        if (!checkIfCoordAreInBound(state, x, y)) {
+    public boolean removeAt(int x, int y) {
+        if (!checkIfCoordAreInBound(x, y)) {
             return false;
         }
         
-        Entity entity = state.entities[x][y];
+        Entity entity = simulation.entities[x][y];
         if (entity != null) {
             if (entity instanceof Passenger) {
                 Passenger passenger = (Passenger) entity;
                 if (passenger.destination != null) {
-                    state.entities[passenger.destination.position.x][passenger.destination.position.y] = null;
+                    simulation.entities[passenger.destination.position.x][passenger.destination.position.y] = null;
                     passenger.destination = null;
                 }
             } else if (entity instanceof Destination) {
                 Destination destination = (Destination) entity;
                 if (destination.origin != null) {
-                    state.entities[destination.origin.position.x][destination.origin.position.y] = null;
+                    simulation.entities[destination.origin.position.x][destination.origin.position.y] = null;
                     destination.origin = null;
                 }
             }
-           state.entities[x][y] = null;
+           simulation.entities[x][y] = null;
            return true;
        }
         return false;
     }
     
-    public static Entity grabAt(SimulationState state, int x, int y) {
-        if (!checkIfCoordAreInBound(state, x, y)) {
+    public Entity grabAt(int x, int y) {
+        if (!checkIfCoordAreInBound(x, y)) {
             return null;
         } else {
-            return state.entities[x][y];
+            return simulation.entities[x][y];
         }
     }
     
-    public static boolean moveAt(SimulationState state, Entity entityGrabbed, int x, int y) {
-        if (!checkIfCoordAreInBound(state, x, y) || state.entities[x][y] != null) {
+    public boolean moveAt(Entity entityGrabbed, int x, int y) {
+        if (!checkIfCoordAreInBound(x, y) || simulation.entities[x][y] != null) {
             return false;
         }
         assert(entityGrabbed != null);
-        state.entities[entityGrabbed.position.x][entityGrabbed.position.y] = null;
-        state.entities[x][y] = entityGrabbed;
+        simulation.entities[entityGrabbed.position.x][entityGrabbed.position.y] = null;
+        simulation.entities[x][y] = entityGrabbed;
         entityGrabbed.position = new Point(x, y);
         if (entityGrabbed instanceof Car) {
             ((Car) entityGrabbed).pastMove.clear();
         }
         return true;
+    }
+    
+    public int getSize() {
+        return simulation.size;
+    }
+    
+    public boolean setSize(int size) {
+        if (size < 3) {
+            return false;
+        }
+        simulation.size = size;
+        simulation.entities = new Entity[size][size];
+        carId = 0;
+        passengerId = 0;
+        return true;
+    }
+    
+    public void clear() {
+        for (int i = 0; i < getSize(); i++) {
+            for (int j = 0; j < getSize(); j++) {
+                simulation.entities[i][j] = null;
+            }  
+        }
+        carId = 0;
+        passengerId = 0;
     }
 }

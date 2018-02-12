@@ -30,6 +30,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.Box;
+import logic.Controler;
 import logic.TestAlgo;
 
 public class CarSharing extends JFrame {
@@ -43,6 +44,7 @@ public class CarSharing extends JFrame {
     private final JButton solve = new JButton("Solve");
     
     private final SimulationState simulationState = new SimulationState();
+    private final Controler controler = new Controler(simulationState);
     private final Canvas canvas;
     
     private final JButton cursorTool = new JButton();
@@ -53,12 +55,12 @@ public class CarSharing extends JFrame {
     
     public CarSharing() throws IOException {
         Inspector inspector = new Inspector();
-        canvas = new Canvas(simulationState, inspector);
+        canvas = new Canvas(controler, inspector);
         final JMenuBar menuBar = new JMenuBar();
         final JMenu menuFile = new JMenu("File");
 
         newSimulation = new JMenuItem();
-        newSimulation.setAction(new NewSimulationAction(simulationState, canvas));
+        newSimulation.setAction(new NewSimulationAction(controler, canvas));
         menuFile.add(newSimulation);
 
         openSimulation = new JMenuItem();
@@ -100,7 +102,7 @@ public class CarSharing extends JFrame {
         size.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                simulationState.setSize((int) size.getValue());
+                controler.setSize((int) size.getValue());
                 canvas.repaint();
             }
         });

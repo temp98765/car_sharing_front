@@ -18,8 +18,8 @@ public class TestAlgo {
     public static void step(SimulationState state) {
         List<Car> cars = new ArrayList<>();
         List<Passenger> passengers = new ArrayList<>();
-        for (int i = 0; i < state.getSize(); i++) {
-            for (int j = 0; j < state.getSize(); j++) {
+        for (int i = 0; i < state.size; i++) {
+            for (int j = 0; j < state.size; j++) {
                 Entity entity = state.entities[i][j];
                 if (entity == null) {
                     continue;
