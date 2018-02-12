@@ -52,7 +52,8 @@ public class CarSharing extends JFrame {
     
     
     public CarSharing() throws IOException {
-        canvas = new Canvas(simulationState);
+        Inspector inspector = new Inspector();
+        canvas = new Canvas(simulationState, inspector);
         final JMenuBar menuBar = new JMenuBar();
         final JMenu menuFile = new JMenu("File");
 
@@ -144,6 +145,7 @@ public class CarSharing extends JFrame {
         container.setLayout(new BorderLayout());
         container.add(toolBar, BorderLayout.PAGE_START);
         container.add(leftColumn, BorderLayout.WEST);
+        container.add(inspector, BorderLayout.EAST);
         container.add(canvas, BorderLayout.CENTER);
         
         setJMenuBar(menuBar);

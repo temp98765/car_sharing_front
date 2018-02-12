@@ -29,9 +29,11 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
     private float mouseX = -1, mouseY = -1;
     
     private ToolState currentToolState = CURSOR;
+    private Inspector inspector;
     
-    public Canvas(SimulationState simulationState) {
+    public Canvas(SimulationState simulationState, Inspector inspector) {
         this.simulationState = simulationState;
+        this.inspector = inspector;
        
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         
@@ -201,6 +203,13 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
        
         if (e.getButton() == MouseEvent.BUTTON1) {
             switch (currentToolState) {
+                case CURSOR: {
+                    if (tileX >=0 && tileX < simulationState.getSize() &&
+                        tileY >=0 && tileY < simulationState.getSize())
+                    {
+                        inspector.setSelectedEntity(simulationState.entities[tileX][tileY]);
+                    }
+                } break;
                 case ADD_CAR: {
                     simulationState.addCar(tileX, tileY);
                 } break;
