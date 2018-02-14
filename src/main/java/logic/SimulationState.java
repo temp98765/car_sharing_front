@@ -34,7 +34,7 @@ public class SimulationState {
                 for (int y = 0; y < size; y++) {
                      Entity entity = entities[x][y];
                     if (entity != null) {
-                        writer.write("" + x + " " + y + " ");
+                        writer.write("" + x + " " + y + " " + entity.id + " ");
                         if (entity instanceof Car) { //@fix: put write in entity ?
                             writer.write("Car");
                         } else if (entity instanceof Passenger) {
@@ -87,7 +87,7 @@ public class SimulationState {
                     newEntities = new Entity[newSize][newSize];
                 } else {
                     String[] tokens = line.split(" ");
-                    if (tokens.length < 3) {
+                    if (tokens.length < 4) {
                         System.out.println("Error : Not enough argument at line " + lineNb);
                         br.close();
                         return;
@@ -95,34 +95,44 @@ public class SimulationState {
                     int x = Integer.parseInt(tokens[0]);
                     int y = Integer.parseInt(tokens[1]);
                     if (newEntities[x][y] != null) {
-                        System.out.println("Error : Two Entity on the same tile");
+                        System.out.println("Error : Two entity on the same tile at line " + lineNb);
                         br.close();
                         return;
                     }
-                    String type = tokens[2];
+                     if (x < 0 || x >= size || y < 0 || y >= size) {
+                        System.out.println("Error : entity out of bound at line " + lineNb);
+                        br.close();
+                        return;
+                    }
+                    int id = Integer.parseInt(tokens[2]);
+                    String type = tokens[3];
                     if (type.equals("Car")) {
-                        newEntities[x][y] = new Car(x, y);
+                        Car car = new Car(x, y);
+                        car.id = id;
+                        newEntities[x][y] = car;
                     } else if (type.equals("Passenger")) {
-                        if (tokens.length < 5) {
+                        if (tokens.length < 6) {
                             System.out.println("Error : Not enough argument for a Passenger at line " + lineNb);
                             br.close();
                             return;
                         }
-                        int destX = Integer.parseInt(tokens[3]);
-                        int destY = Integer.parseInt(tokens[4]);
+                        int destX = Integer.parseInt(tokens[4]);
+                        int destY = Integer.parseInt(tokens[5]);
                         Passenger passenger = new Passenger(x, y, null);
+                        passenger.id = id;
                         newEntities[x][y] = passenger;
                         passengerToResolve.add(new Tuple(passenger, new Point(destX, destY)));
                     } else if (type.equals("Destination")) {
-                        if (tokens.length < 5) {
+                        if (tokens.length < 6) {
                             System.out.println("Error : Not enough argument for a Destination at line " + lineNb);
                             br.close();
                             return;
                         }
-                        int originX = Integer.parseInt(tokens[3]);
-                        int originY = Integer.parseInt(tokens[4]);
+                        int originX = Integer.parseInt(tokens[4]);
+                        int originY = Integer.parseInt(tokens[5]);
                         Destination destination = new Destination(x, y, null);
                         newEntities[x][y] = destination;
+                        destination.id = id;
                         destinationToResolve.add(new Tuple(destination, new Point(originX, originY)));
                     }
                 }
@@ -148,7 +158,7 @@ public class SimulationState {
             entities = newEntities;
             //notify everyone
         } catch (NumberFormatException | NoSuchElementException ex) {
-            System.out.println("LOL error line " + lineNb);
+            System.out.println("Malformed file at line " + lineNb);
             if (br != null) {
                 try {
                     br.close();
