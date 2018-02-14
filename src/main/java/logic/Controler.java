@@ -126,7 +126,7 @@ public class Controler {
     }
     
     public boolean setSize(int size) {
-        if (size < 3) {
+        if (size < 3 || simulation.size == size) {
             return false;
         }
         simulation.size = size;
