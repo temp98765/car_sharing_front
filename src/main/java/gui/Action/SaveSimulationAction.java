@@ -5,15 +5,16 @@ import java.io.File;
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import static javax.swing.JFileChooser.APPROVE_OPTION;
+import logic.Controler;
 import logic.SimulationState;
 
 
 public class SaveSimulationAction extends AbstractAction {
 
-    private final SimulationState simulationState;
+    private final Controler controler;
     
-    public SaveSimulationAction(SimulationState simulationState) {
-        this.simulationState = simulationState;
+    public SaveSimulationAction(Controler controler) {
+        this.controler = controler;
         putValue(NAME, "Save simulation");
     }
     
@@ -24,7 +25,7 @@ public class SaveSimulationAction extends AbstractAction {
         fileChooser.setSelectedFile(new File(filename));
         int result = fileChooser.showSaveDialog(null);
         if (result == APPROVE_OPTION) {
-            simulationState.save(fileChooser.getSelectedFile());
+            controler.save(fileChooser.getSelectedFile());
         }
     }
     

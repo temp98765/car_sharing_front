@@ -32,9 +32,10 @@ import javax.swing.event.ChangeListener;
 import javax.swing.Box;
 import logic.Algo;
 import logic.Controler;
+import logic.Listener;
 import logic.TestAlgo;
 
-public class CarSharing extends JFrame {
+public class CarSharing extends JFrame implements Listener {
     private final JMenuItem newSimulation;
     private final JMenuItem openSimulation;
     private final JMenuItem saveSimulation;
@@ -56,6 +57,7 @@ public class CarSharing extends JFrame {
     
     
     public CarSharing() throws IOException {
+        controler.addListener(this);
         Inspector inspector = new Inspector();
         canvas = new Canvas(controler, inspector);
         final JMenuBar menuBar = new JMenuBar();
@@ -66,11 +68,11 @@ public class CarSharing extends JFrame {
         menuFile.add(newSimulation);
 
         openSimulation = new JMenuItem();
-        openSimulation.setAction(new OpenSimulationAction(simulationState));
+        openSimulation.setAction(new OpenSimulationAction(controler));
         menuFile.add(openSimulation);
 
         saveSimulation = new JMenuItem();
-        saveSimulation.setAction(new SaveSimulationAction(simulationState));
+        saveSimulation.setAction(new SaveSimulationAction(controler));
         menuFile.add(saveSimulation);
 
         menuFile.addSeparator();
@@ -162,5 +164,10 @@ public class CarSharing extends JFrame {
     
     public static void main(String[] arg) throws Exception {
         new CarSharing();
+    }
+
+    @Override
+    public void needRefresh() {
+        size.setValue(Integer.valueOf(controler.getSize()));
     }
 }
