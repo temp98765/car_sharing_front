@@ -129,7 +129,7 @@ public class CarSharing extends JFrame implements Listener {
             }
         });
         solveLayout.add(step);
-        solveLayout.add(solve);
+        //solveLayout.add(solve);
         leftColumn.add(solveLayout);
         
         

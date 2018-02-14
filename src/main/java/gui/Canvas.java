@@ -45,7 +45,13 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
     }
     
     public void setCurrentTool(ToolState tool) {
+        if (currentToolState == ADD_DESTINATION_PASSENGER && passengerCurrentlyCreated != null) {
+            controlerSimultaion.removeAt(passengerCurrentlyCreated.position.x, passengerCurrentlyCreated.position.y);
+             passengerCurrentlyCreated = null;
+        }
+        entityGrabbed = null;
         currentToolState = tool;
+        
     }
     
     @Override
@@ -225,6 +231,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
                 } break;
                 case ADD_DESTINATION_PASSENGER: {
                    if (controlerSimultaion.addDestination(tileX, tileY, passengerCurrentlyCreated)) {
+                       passengerCurrentlyCreated = null;
                        setCurrentTool(ADD_PASSENGER);
                    }
                 } break;
