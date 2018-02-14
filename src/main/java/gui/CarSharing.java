@@ -66,7 +66,7 @@ public class CarSharing extends JFrame {
         menuFile.add(newSimulation);
 
         openSimulation = new JMenuItem();
-        openSimulation.setAction(new OpenSimulationAction());
+        openSimulation.setAction(new OpenSimulationAction(simulationState));
         menuFile.add(openSimulation);
 
         saveSimulation = new JMenuItem();
