@@ -64,7 +64,6 @@ public class SimulationState {
     }
     
     public void load(File file) {
-        //@fix check if out of array
         int lineNb = 0;
         BufferedReader br = null;
         try {

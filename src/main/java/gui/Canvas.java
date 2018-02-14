@@ -20,8 +20,9 @@ import javax.swing.JPanel;
 import logic.Controler;
 import logic.Destination;
 import logic.Entity;
+import logic.Listener;
 
-public class Canvas extends JPanel implements MouseMotionListener, MouseListener {
+public class Canvas extends JPanel implements MouseMotionListener, MouseListener, Listener {
     private final Controler controlerSimultaion;
     private final static int WIDTH = 600;
     private final static int HEIGHT = 600;
@@ -34,6 +35,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
     
     public Canvas(Controler controlerSimultaion, Inspector inspector) {
         this.controlerSimultaion = controlerSimultaion;
+        controlerSimultaion.addListener(this);
         this.inspector = inspector;
        
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -192,7 +194,9 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
     public void mouseMoved(MouseEvent e) {
         mouseX = e.getX();
         mouseY = e.getY();
-        repaint();
+        if (currentToolState != CURSOR && currentToolState != CAN_MOVE) {
+            repaint();
+        }
     }
 
     private Passenger passengerCurrentlyCreated = null;
@@ -231,7 +235,6 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
                 currentToolState = ADD_PASSENGER;
             }
         }
-        repaint();
     }
 
     Entity entityGrabbed = null;
@@ -255,9 +258,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
             currentToolState = CAN_MOVE;
             int tileX = e.getX() / blockSize;
             int tileY = e.getY() / blockSize;
-            if (controlerSimultaion.moveAt(entityGrabbed, tileX, tileY)) {
-                repaint();
-            }
+            controlerSimultaion.moveAt(entityGrabbed, tileX, tileY);
         }
     }
 
@@ -270,6 +271,13 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
     public void mouseExited(MouseEvent e) {
         mouseX = -1;
         mouseY = -1;
+        if (currentToolState != CURSOR && currentToolState != CAN_MOVE) {
+            repaint();
+        }
+    }
+
+    @Override
+    public void needRefresh() {
         repaint();
     }
 }

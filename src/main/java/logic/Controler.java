@@ -1,10 +1,13 @@
 package logic;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Controler {
     
+    private List<Listener> listeners = new ArrayList<>();
     private SimulationState simulation;
     private int carId = 0;
     private int passengerId = 0;
@@ -24,6 +27,7 @@ public class Controler {
         Car car = new Car(x, y);
         car.id = carId++;
         simulation.entities[x][y] = car;
+        notifyListener();
         return true;
     }
     
@@ -34,6 +38,7 @@ public class Controler {
         Passenger passenger = new Passenger(x, y, null);
         passenger.id = passengerId++;
         simulation.entities[x][y] = passenger;
+        notifyListener();
         return passenger;
     }
      
@@ -46,6 +51,7 @@ public class Controler {
         assert(passenger.destination == null);
         passenger.destination = destination;
         simulation.entities[x][y] = destination;
+        notifyListener();
         return true;
     }
     
@@ -74,6 +80,7 @@ public class Controler {
                 }
             }
            simulation.entities[x][y] = null;
+           notifyListener();
            return true;
        }
         return false;
@@ -98,6 +105,7 @@ public class Controler {
         if (entityGrabbed instanceof Car) {
             ((Car) entityGrabbed).pastMove.clear();
         }
+        notifyListener();
         return true;
     }
     
@@ -124,5 +132,15 @@ public class Controler {
         }
         carId = 0;
         passengerId = 0;
+    }
+    
+    public void addListener(Listener listener) {
+        listeners.add(listener);
+    }
+    
+    private void notifyListener() {
+        for (Listener l : listeners) {
+            l.needRefresh();
+        }
     }
 }
